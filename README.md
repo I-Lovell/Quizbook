@@ -23,7 +23,8 @@ the application works.
 
 ### Card wall
 
-REPLACE THIS TEXT WITH A LINK TO YOUR CARD WALL
+Link to our Trello board:
+https://trello.com/b/WVKeI5oP
 
 ### Quickstart
 
