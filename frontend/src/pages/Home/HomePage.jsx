@@ -6,15 +6,20 @@ export const HomePage = () => {
   return (
     <div className="home">
       <header className="header">
-        <img src={logo} alt="Quizler Logo" className="logo" />
-        <h1 className="title">Quizler</h1>
-        <Link to="/login" className="SignInButton">Sign in</Link>
-        <Link to="/signup" className="SignUpButton">Sign up</Link>
+        <div className="logo-container">
+          <img src={logo} alt="Quizler Logo" className="logo" />
+          <h1 className="title">Quizler</h1>
+        </div>
+        <nav className="nav">
+          <Link to="/login" className="nav-button">Sign in</Link>
+          <Link to="/signup" className="nav-button">Sign up</Link>
+        </nav>
       </header>
-
-      <div className="welcome-box">
-        <p>Welcome to Quizler! The number one hub to connect with fellow quiz-lovers!</p>
-      </div>
+      <main className="main-content">
+        <div className="welcome-box">
+          <p>Welcome to Quizler! The number one hub to connect with fellow quiz-lovers!</p>
+        </div>
+      </main>
     </div>
   );
 };
