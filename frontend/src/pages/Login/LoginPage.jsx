@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import logo from "/Quizler-Logo.png";
 import { login } from "../../services/authentication";
 
 export const LoginPage = () => {
@@ -28,9 +28,15 @@ export const LoginPage = () => {
     setPassword(event.target.value);
   };
 
-  return (
-    <>
-      <h2>Login</h2>
+return (
+    <div className="home">
+          <header className="header">
+            <div className="logo-container">
+              <img src={logo} alt="Quizler Logo" className="logo" />
+              <h1 className="title">Quizzler</h1>
+            </div>
+            </header>
+      <main className="main-content">
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
@@ -40,7 +46,8 @@ export const LoginPage = () => {
           onChange={handleEmailChange}
         />
         <label htmlFor="password">Password:</label>
-        <input
+      <input
+        placeholder="Password"
           id="password"
           type="password"
           value={password}
@@ -48,6 +55,8 @@ export const LoginPage = () => {
         />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
-    </>
+      <p className="signup-text"> Don't have an account? <a className="loginButton" href="/login">Sign Up Here</a></p>
+      </main>
+    </div>
   );
 };
