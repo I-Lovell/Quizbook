@@ -30,14 +30,13 @@ export const FeedPage = () => {
 
   return (
     <div className="home">
-      <LoggedInHeader />
+      <LoggedInHeader onLogout={logOutHandler} />
       <h2>Posts</h2>
       <div className="feed" role="feed">
         {posts.map((post) => (
           <Post post={post} key={post._id} />
         ))}
       </div>
-      <button onClick={logOutHandler}>Log Out</button>
     </div>
   );
 };
