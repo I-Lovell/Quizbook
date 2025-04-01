@@ -55,7 +55,7 @@ return (
         />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
-      <p className="signup-text"> Don't have an account? <a className="loginButton" href="/login">Sign Up Here</a></p>
+      <p className="signup-text"> Don't have an account? <a className="loginButton" href="/signup">Sign Up Here</a></p>
       </main>
     </div>
   );
