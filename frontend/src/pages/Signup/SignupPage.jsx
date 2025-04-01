@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "./SignupPage.css";
+import logo from "/Quizler-Logo.png";
 import { signup } from "../../services/authentication";
 
 export const SignupPage = () => {
@@ -29,8 +30,14 @@ export const SignupPage = () => {
   };
 
   return (
-    <>
-      <h2>Signup</h2>
+    <div className="home">
+          <header className="header">
+            <div className="logo-container">
+              <img src={logo} alt="Quizler Logo" className="logo" />
+              <h1 className="title">Quizzler</h1>
+            </div>
+            </header>
+      <main className="main-content">
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
@@ -49,6 +56,8 @@ export const SignupPage = () => {
         />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
-    </>
+      <p className="signup-text"> Already have an account? <a className="loginButton" href="/login">Login here</a></p>
+      </main>
+    </div>
   );
 };
