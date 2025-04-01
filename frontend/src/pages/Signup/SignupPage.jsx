@@ -34,7 +34,7 @@ export const SignupPage = () => {
           <header className="header">
             <div className="logo-container">
               <img src={logo} alt="Quizler Logo" className="logo" />
-              <h1 className="title">Quizzler</h1>
+              <h1 className="title">QuizBook</h1>
             </div>
             </header>
       <main className="main-content">
