@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./Header.css";
 import logo from "/Quizler-Logo.png";
 
-export const Header = () => {
+export const LoggedInHeader = () => {
   return (
         <header className="header">
           <div className="logo-container">
@@ -11,11 +11,11 @@ export const Header = () => {
             <h1 className="title">QuizBook</h1>
           </div>
           <nav className="nav">
-            <Link to="/login" className="nav-button">Sign in</Link>
-            <Link to="/signup" className="nav-button">Sign up</Link>
+            <Link to="/posts" className="nav-button">Home</Link>
+            <Link to="/login" className="nav-button">Logout</Link>
           </nav>
         </header>
   );
 }
 
-export default Header;
+export default LoggedInHeader;
