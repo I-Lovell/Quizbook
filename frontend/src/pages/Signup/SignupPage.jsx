@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "/Quizler-Logo.png";
 import { signup } from "../../services/authentication";
+import Header from "../../components/Post/Header";
 
 export const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -30,12 +30,7 @@ export const SignupPage = () => {
 
   return (
     <div className="home">
-          <header className="header">
-            <div className="logo-container">
-              <img src={logo} alt="Quizler Logo" className="logo" />
-              <h1 className="title">QuizBook</h1>
-            </div>
-            </header>
+          <Header />
       <main className="main-content">
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
