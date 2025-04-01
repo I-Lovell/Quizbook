@@ -8,7 +8,7 @@ export const HomePage = () => {
       <header className="header">
         <div className="logo-container">
           <img src={logo} alt="Quizler Logo" className="logo" />
-          <h1 className="title">Quizzler</h1>
+          <h1 className="title">QuizBook</h1>
         </div>
         <nav className="nav">
           <Link to="/login" className="nav-button">Sign in</Link>
@@ -17,7 +17,7 @@ export const HomePage = () => {
       </header>
       <main className="main-content">
         <div className="welcome-box">
-          <p>Welcome to Quizzler! The number one hub to connect with fellow quiz-lovers!</p>
+          <p>Welcome to QuizBook! The number one hub to connect with fellow quiz-lovers!</p>
         </div>
       </main>
     </div>
