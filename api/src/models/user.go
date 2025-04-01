@@ -6,8 +6,16 @@ import (
 
 type User struct {
 	gorm.Model
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Username          string `json:"username" gorm:"uniqueIndex;size:50"`
+	Email             string `json:"email" gorm:"uniqueIndex;size:255"`
+	Password          string `json:"password"`
+	FirstName         string `json:"first_name" gorm:"size:50"`
+	Surname           string `json:"surname" gorm:"size:50"`
+	Bio               string `json:"bio"`
+	ProfilePictureURL string `json:"profile_picture_url" gorm:"size:255"`
+	Posts             []Post
+	Comments          []Comment
+	Likes             []Like
 }
 
 func (user *User) Save() (*User, error) {
