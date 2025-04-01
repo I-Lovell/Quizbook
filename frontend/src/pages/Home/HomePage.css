@@ -1,4 +1,56 @@
 .home {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.logo {
+  height: 50px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.SignInButton {
+  border: 2px solid black;
+  padding: 5px 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.SignUpButton {
+  border: 2px solid black;
+  padding: 5px 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.welcome-box {
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+  text-align: center;
+  width: 80%;
+  max-width: 500px;
+  font-size: 16px;
 }
