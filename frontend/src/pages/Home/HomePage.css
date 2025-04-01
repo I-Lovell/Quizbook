@@ -4,9 +4,10 @@
   align-items: center;
   justify-content: flex-start;
   height: 100vh;
-  background-color: #f4f4f4;
+  width: 100vw;
   padding: 20px;
   font-family: 'Arial', sans-serif;
+  background-color: rgb(214, 243, 216);
 }
 
 .header {
@@ -52,7 +53,7 @@
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
-  background-color: #007bff;
+  background-color: #19a71c;
   color: white;
   text-decoration: none;
   font-size: 16px;
@@ -61,7 +62,8 @@
 }
 
 .nav-button:hover {
-  background-color: #0056b3;
+  background-color: #f0e919;
+  color: #333;
 }
 
 .main-content {
