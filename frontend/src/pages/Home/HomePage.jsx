@@ -9,11 +9,11 @@ export const HomePage = () => {
         <img src={logo} alt="Quizler Logo" className="logo" />
         <h1 className="title">Quizler</h1>
         <Link to="/login" className="SignInButton">Sign in</Link>
-        <Link to="/register" className="SignUpButton">Sign up</Link>
+        <Link to="/signup" className="SignUpButton">Sign up</Link>
       </header>
 
       <div className="welcome-box">
-        <p>Welcome to Quizler! The number one hub to connect with fellow quiz-lovers :</p>
+        <p>Welcome to Quizler! The number one hub to connect with fellow quiz-lovers!</p>
       </div>
     </div>
   );
