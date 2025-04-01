@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./SignupPage.css";
 import logo from "/Quizler-Logo.png";
 import { signup } from "../../services/authentication";
 
