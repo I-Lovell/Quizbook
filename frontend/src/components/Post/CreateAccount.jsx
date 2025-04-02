@@ -1,19 +1,30 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./CreateAccount.css";
+import { useNavigate } from "react-router-dom";
+import { signup } from "../../services/authentication";
+
 
 export const CreateAccount = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const navigate = useNavigate();
 
   const handleEmailChange = (event) => setEmail(event.target.value);
   const handlePasswordChange = (event) => setPassword(event.target.value);
   const handleUsernameChange = (event) => setUsername(event.target.value);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Account Created:", { email, password, username });
+    try {
+      await signup(email, password, username);
+      console.log("redirecting...:");
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+      navigate("/signup");
+    }
   };
 
   return (
