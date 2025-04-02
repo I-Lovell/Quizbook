@@ -3,13 +3,21 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 160px;
+    padding: 80px;
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
-    background-color: rgb(248, 248, 248);
+    background-color: rgb(243, 243, 243);
     border-radius: 10px;
     box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
+}
+
+.create-account-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
 }
 
 .account-details {
@@ -20,22 +28,29 @@
 }
 
 .signup-text {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
+    text-align: center;
     color: #333;
     margin-bottom: 20px;
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: left;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 300px;
     padding: 40px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-bottom: 2px solid black;
+    font-size: 16px;
 }
