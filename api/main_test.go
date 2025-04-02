@@ -82,7 +82,8 @@ func (suite *TestSuiteEnv) Test_GetPosts() {
 	app, token := suite.app, suite.token
 
 	newPost := models.Post{
-		Message: "Test Post",
+		Question: "Test Post",
+		Answer: "Test Answer",
 	}
 	newPost.Save()
 
@@ -98,5 +99,6 @@ func (suite *TestSuiteEnv) Test_GetPosts() {
 	_ = json.Unmarshal(responseData, &jsonPosts)
 
 	assert.Equal(suite.T(), 200, suite.res.Code)
-	assert.Equal(suite.T(), "Test Post", jsonPosts.Posts[0].Message)
+	assert.Equal(suite.T(), "Test Post", jsonPosts.Posts[0].Question)
+	assert.Equal(suite.T(), "Test Answer", jsonPosts.Posts[0].Answer)
 }

@@ -8,7 +8,12 @@ import (
 
 type Post struct {
 	gorm.Model
-	Message string `json:"message"`
+	UserID    uint      `json:"user_id"`
+	User      User      `json:"user"`
+	Question  string    `json:"question"`
+	Answer    string    `json:"answer"`
+	Comments  []Comment `json:"comments"`
+	Likes     []Like    `json:"likes"`
 }
 
 func (post *Post) Save() (*Post, error) {
