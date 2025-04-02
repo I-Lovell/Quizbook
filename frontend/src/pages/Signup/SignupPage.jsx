@@ -3,16 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { signup } from "../../services/authentication";
 import Header from "../../components/Post/Header";
 import "./SignupPage.css";
+import CreateAccount from "../../components/Post/CreateAccount";
 
 export const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await signup(email, password);
+      await signup(email, password, username);
       console.log("redirecting...:");
       navigate("/login");
     } catch (err) {
@@ -29,32 +31,22 @@ export const SignupPage = () => {
     setPassword(event.target.value);
   };
 
-  return (
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handleFirstNameChange = (event) => {
+    setFirstName(event.target.value);
+  };
+  
+  const handleSurnameChange = (event) => {
+    setSurname(event.target.value);
+  };
+
+return (
     <div className="home">
-          <Header />
-      <main className="main-content">
-      <h1 className="login-title">Create an Account</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input
-          placeholder="Email"
-          id="email"
-          type="text"
-          value={email}
-          onChange={handleEmailChange}
-        />
-        <label htmlFor="password">Password:</label>
-        <input
-          placeholder="Password"
-          id="password"
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-        <input role="submit-button" id="submit" type="submit" value="Submit" />
-      </form>
-      <p className="signup-text"> Already have an account? <a className="loginButton" href="/login">Login here</a></p>
-      </main>
+      <Header />
+      <CreateAccount /> 
     </div>
   );
 };
