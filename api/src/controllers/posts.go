@@ -63,14 +63,13 @@ func CreatePost(ctx *gin.Context) {
 
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
-	
 
 	// The below fixes an error that was happening when trying to create a post
-	// We can probaly handle this in a more elegant way
+	// The issue is: It's ALWAYS assigning the user_id of a post to 1 (when it should be the user_id of the logged in user)
 
 	// Create a User ID that is a valid uint
 	var userIDUint uint = 1 // Just default to user ID 1 if we can't parse
-	
+
 	// Only try to parse if it looks like a number
 	if userID != "" && userID[0] >= '0' && userID[0] <= '9' {
 		parsed, err := strconv.ParseUint(userID, 10, 32)
