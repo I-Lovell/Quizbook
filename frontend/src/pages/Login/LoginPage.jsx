@@ -32,9 +32,11 @@ return (
     <div className="home">
       <Header />
       <main className="main-content">
+      <h1 className="login-title">Login</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
+          placeholder="Email"
           id="email"
           type="text"
           value={email}

@@ -85,3 +85,10 @@
     margin: 20px auto;
   }
   
+  .login-title {
+    font-size: 48px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 30px;
+  }
