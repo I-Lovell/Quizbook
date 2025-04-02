@@ -21,7 +21,8 @@ func main() {
 
 	// Create a test testPost. Delete these lines when you are creating posts of your own.
 	testPost := models.Post{
-		Message: fmt.Sprintf("This is a test message created at %v!", time.Now()),
+		Question: fmt.Sprintf("This is a test question created at %v!", time.Now()),
+		Answer: "This is a test answer for the question above.",
 	}
 	testPost.Save()
 
