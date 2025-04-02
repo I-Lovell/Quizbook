@@ -31,7 +31,29 @@ export const LoginPage = () => {
 return (
     <div className="home">
       <Header />
-      <CreateAccount /> 
+      <main className="main-content">
+      <h1 className="login-title">Login</h1>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="email">Email:</label>
+        <input
+          placeholder="Email"
+          id="email"
+          type="text"
+          value={email}
+          onChange={handleEmailChange}
+        />
+        <label htmlFor="password">Password:</label>
+      <input
+        placeholder="Password"
+          id="password"
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
+        />
+        <input role="submit-button" id="submit" type="submit" value="Submit" />
+      </form>
+      <p className="signup-text"> Don&apos;t have an account? <a className="loginButton" href="/signup">Sign Up Here</a></p>
+      </main>
     </div>
   );
 };
