@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../services/authentication";
 import Header from "../../components/Post/Header";
+import "./SignupPage.css";
 
 export const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -32,9 +33,11 @@ export const SignupPage = () => {
     <div className="home">
           <Header />
       <main className="main-content">
+      <h1 className="login-title">Create an Account</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
+          placeholder="Email"
           id="email"
           type="text"
           value={email}
