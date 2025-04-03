@@ -1,6 +1,6 @@
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
 import ProfilePicture from "../../components/Post/ProfilePicture";
-import ProfileBio from "../../components/Post/Bio";
+import Bio from "../../components/Post/Bio";
 
 
 export const ProfilePage = () => {
@@ -8,6 +8,7 @@ export const ProfilePage = () => {
     <div className="home">
       <LoggedInHeader />
       <ProfilePicture />
+      <Bio />
     </div>
   );
 };
