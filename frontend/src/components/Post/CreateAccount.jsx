@@ -18,7 +18,7 @@ export const CreateAccount = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await signup(email, password, username, firstName, surname);
+      await signup(email, password, username);
       console.log("redirecting...:");
       navigate("/login");
     } catch (err) {
