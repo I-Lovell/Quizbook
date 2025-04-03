@@ -31,7 +31,6 @@ export const FeedPage = () => {
 
   return (
     <div className="home">
-      <div className="backim"></div>
       <LoggedInHeader onLogout={logOutHandler} />
       <h2>Posts</h2>
       <div className="feed" role="feed">
