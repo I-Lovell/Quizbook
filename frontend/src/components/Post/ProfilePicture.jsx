@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 const ProfilePicture = ({ initialProfilePicture, token }) => {
@@ -10,8 +9,8 @@ const ProfilePicture = ({ initialProfilePicture, token }) => {
 
     try {
       await updateProfile({ profilePicture: newUrl }, token);
-      setProfilePicture(newUrl); 
-      setNewUrl(""); 
+      setProfilePicture(newUrl);
+      setNewUrl("");
     } catch (error) {
       console.error("Error updating profile picture:", error);
       alert("Failed to update profile picture. Please try again.");
@@ -22,19 +21,19 @@ const ProfilePicture = ({ initialProfilePicture, token }) => {
     <div className="profile-picture-container">
       <img
         src={profilePicture || "https://img.freepik.com/free-psd/cartoon-question-mark-isolated_23-2151568563.jpg?semt=ais_hybrid"}
-        alt="ProfilePicture"
+        alt="Profile"
         className="profile-picture"
       />
-      <Input
+      <input
         type="text"
         placeholder="Enter new profile picture URL"
         value={newUrl}
         onChange={(event) => setNewUrl(event.target.value)}
         className="profile-picture-input"
       />
-      <Button onClick={handleUpdate} disabled={!newUrl}>
+      <button onClick={handleUpdate} disabled={!newUrl}>
         Update Profile Picture
-      </Button>
+      </button>
     </div>
   );
 };
