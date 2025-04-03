@@ -1,8 +1,5 @@
 
 import { useState } from "react";
-import { updateProfile } from "../api/profileApi"; 
-import { Button, Input } from "@/components/ui"; 
-import "./ProfilePicture.css";
 
 const ProfilePicture = ({ initialProfilePicture, token }) => {
   const [profilePicture, setProfilePicture] = useState(initialProfilePicture);
@@ -25,7 +22,7 @@ const ProfilePicture = ({ initialProfilePicture, token }) => {
     <div className="profile-picture-container">
       <img
         src={profilePicture || "https://img.freepik.com/free-psd/cartoon-question-mark-isolated_23-2151568563.jpg?semt=ais_hybrid"}
-        alt="Profile"
+        alt="ProfilePicture"
         className="profile-picture"
       />
       <Input
