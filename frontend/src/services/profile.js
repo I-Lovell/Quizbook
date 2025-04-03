@@ -9,7 +9,7 @@ export const getSelf = async (token) => {
     },
   };
 
-  const response = await fetch(`${BACKEND_URL}/profile`, requestOptions);
+  const response = await fetch(`${BACKEND_URL}/users`, requestOptions);
 
   if (response.status !== 200) {
     throw new Error("Unable to fetch profile");
@@ -25,7 +25,7 @@ export const PostBio = async (token, bio) => {
   };
 
   const requestOptions = {
-    method: "POST",
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -33,7 +33,7 @@ export const PostBio = async (token, bio) => {
     body: JSON.stringify(payload),
   };
 
-  let response = await fetch(`${BACKEND_URL}/profile`, requestOptions);
+  let response = await fetch(`${BACKEND_URL}/users`, requestOptions);
 
   if (response.status === 201) {
     return;
@@ -50,7 +50,7 @@ export const PostProfilePicture = async (token, profilePictureURL) => {
   };
 
   const requestOptions = {
-    method: "POST",
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ export const PostProfilePicture = async (token, profilePictureURL) => {
     body: JSON.stringify(payload),
   };
 
-  let response = await fetch(`${BACKEND_URL}/profile`, requestOptions);
+  let response = await fetch(`${BACKEND_URL}/users`, requestOptions);
 
   if (response.status === 201) {
     return;
@@ -71,7 +71,7 @@ export const PostProfilePicture = async (token, profilePictureURL) => {
 
 export const updateProfile = async (updates, token) => {
   const requestOptions = {
-    method: "PATCH",
+    method: "PUT", //PATCH?
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -79,7 +79,7 @@ export const updateProfile = async (updates, token) => {
     body: JSON.stringify(updates),
   };
 
-  const response = await fetch(`${BACKEND_URL}/profile`, requestOptions);
+  const response = await fetch(`${BACKEND_URL}/users`, requestOptions);
 
   if (response.status !== 200) {
     throw new Error(
