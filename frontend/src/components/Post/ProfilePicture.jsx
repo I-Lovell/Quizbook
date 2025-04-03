@@ -2,17 +2,27 @@ import { useState } from "react";
 import { updateProfile } from "../../services/profile";
 import "./ProfilePicture.css";
 
-const ProfilePicture = ({ initialProfilePicture, token }) => {
-  const [profilePicture, setProfilePicture] = useState(initialProfilePicture);
-  const [newUrl, setNewUrl] = useState("");
+const ProfilePicture = ({ isEditing, token }) => {
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [preview, setPreview] = useState("");
 
-  const handleUpdate = async () => {
-    if (!newUrl) return;
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setProfilePicture(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!profilePicture) return;
+
+    const formData = new FormData();
+    formData.append("profilePicture", profilePicture);
 
     try {
-      await updateProfile({ profilePicture: newUrl }, token);
-      setProfilePicture(newUrl);
-      setNewUrl("");
+      await updateProfile(formData, token);
+      alert("Profile picture updated!");
     } catch (error) {
       console.error("Error updating profile picture:", error);
       alert("Failed to update profile picture. Please try again.");
@@ -22,22 +32,21 @@ const ProfilePicture = ({ initialProfilePicture, token }) => {
   return (
     <div className="profile-picture-container">
       <img
-        src={profilePicture || "https://img.freepik.com/free-psd/cartoon-question-mark-isolated_23-2151568563.jpg?semt=ais_hybrid"}
+        src={preview || "https://img.freepik.com/free-psd/cartoon-question-mark-isolated_23-2151568563.jpg?semt=ais_hybrid"}
         alt="Profile"
         className="profile-picture"
       />
-      {/* <input
-        type="text"
-        placeholder="Enter new profile picture URL"
-        value={newUrl}
-        onChange={(event) => setNewUrl(event.target.value)}
-        className="profile-picture-input"
-      />
-      <button onClick={handleUpdate} disabled={!newUrl}>
-        Update Profile Picture
-      </button> */}
+      {isEditing && (
+        <>
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <button onClick={handleUpload} disabled={!profilePicture}>
+            Upload Picture
+          </button>
+        </>
+      )}
     </div>
   );
 };
 
 export default ProfilePicture;
+

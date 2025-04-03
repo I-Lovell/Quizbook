@@ -1,15 +1,22 @@
-
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import "./Bio.css";
 
-export const Bio = () => {
+export const Bio = ({ isEditing }) => {
+  const [bio, setBio] = useState("This is a sample bio. You can add your own bio.");
+
   return (
-        <header className="bio-container">
-            <p className="bio">
-              This is a sample bio. You can add your own bio.
-            </p>
-        </header>
+    <header className="bio-container">
+      {isEditing ? (
+        <textarea
+          className="bio-edit"
+          value={bio}
+          onChange={(event) => setBio(event.target.value)}
+        />
+      ) : (
+        <p className="bio">{bio}</p>
+      )}
+    </header>
   );
-}
+};
 
 export default Bio;
