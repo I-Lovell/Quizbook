@@ -22,7 +22,7 @@ func UserSeeds(db *gorm.DB) {
 		if err != nil {
 			fmt.Printf("Error when create users: %s\n", user.Username)
 		} else {
-			fmt.Printf("Sucess create roles: %s\n", user.Username)
+			fmt.Printf("Sucessfully created user: %s\n", user.Username)
 		}
 	}
 }
