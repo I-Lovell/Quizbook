@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
 import { getPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
+import "../Background.css";
 
 export const FeedPage = () => {
   const [posts, setPosts] = useState([]);
@@ -30,6 +31,7 @@ export const FeedPage = () => {
 
   return (
     <div className="home">
+      <div className="backim"></div>
       <LoggedInHeader onLogout={logOutHandler} />
       <h2>Posts</h2>
       <div className="feed" role="feed">

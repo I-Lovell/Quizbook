@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { updateProfile } from "../../services/profile";
+import "./ProfilePicture.css";
 
 const ProfilePicture = ({ initialProfilePicture, token }) => {
   const [profilePicture, setProfilePicture] = useState(initialProfilePicture);
