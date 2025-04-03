@@ -81,9 +81,9 @@ export const updateProfile = async (updates, token) => {
 
   const response = await fetch(`${BACKEND_URL}/users`, requestOptions);
 
-  if (response.status !== 200) {
+  if (response.status !== 201) {
     throw new Error(
-      `Received status ${response.status} when updating profile. Expected 200`
+      `Received status ${response.status} when updating profile. Expected 201`
     );
   }
 };

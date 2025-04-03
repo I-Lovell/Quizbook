@@ -10,8 +10,7 @@ import (
 
 func AuthenticationMiddleware(ctx *gin.Context) {
 	tokenString := ctx.GetHeader("Authorization")[7:]
-
-	fmt.Println(tokenString)
+	fmt.Print("Token string is: =>>>>>>>>>>🔥", tokenString, "\n")
 
 	token, err := auth.DecodeToken(tokenString)
 
