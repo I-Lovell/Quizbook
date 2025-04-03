@@ -26,7 +26,7 @@ const ProfilePicture = ({ initialProfilePicture, token }) => {
         alt="Profile"
         className="profile-picture"
       />
-      <input
+      {/* <input
         type="text"
         placeholder="Enter new profile picture URL"
         value={newUrl}
@@ -35,7 +35,7 @@ const ProfilePicture = ({ initialProfilePicture, token }) => {
       />
       <button onClick={handleUpdate} disabled={!newUrl}>
         Update Profile Picture
-      </button>
+      </button> */}
     </div>
   );
 };
