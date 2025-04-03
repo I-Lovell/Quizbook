@@ -14,18 +14,16 @@ func main() {
 
 	app := setupApp()
 
+	
 	models.OpenDatabaseConnection()
+
+	// !! WILL DROP ALL TABLES WHEN MAIN RUNS !! //
+	seeds.DropTablesifExist(models.Database)
+	// !! WILL DROP ALL TABLES WHEN MAIN RUNS !! //
+
 	models.AutoMigrateModels()
 
 	seeds.SeedDatabase(models.Database)
-
-	// Create a test testPost. Delete these lines when you are creating posts of your own.
-	testPost := models.Post{
-		Question: fmt.Sprintf("This is a test question created at %v!", time.Now()),
-		Answer: "This is a test answer for the question above.",
-	}
-	testPost.Save()
-
 	app.Run(":8082")
 }
 
