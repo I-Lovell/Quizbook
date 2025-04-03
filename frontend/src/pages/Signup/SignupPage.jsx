@@ -35,14 +35,6 @@ export const SignupPage = () => {
     setUsername(event.target.value);
   };
 
-  const handleFirstNameChange = (event) => {
-    setFirstName(event.target.value);
-  };
-  
-  const handleSurnameChange = (event) => {
-    setSurname(event.target.value);
-  };
-
 return (
     <div className="home">
       <Header />
