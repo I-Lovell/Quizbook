@@ -27,13 +27,41 @@ Returns a JSON object containing an array of all posts and a new JWT token.
       "_id": 1,
       "question": "This is a test question",
       "answer": "test answer from bobio",
-      "user_id": 1
+      "user_id": 1,
+      "username": "bobsmith",
+      "comments": [
+        {
+          "userID": 2,
+          "username": "luke",
+          "contents": "this is a comment"
+        },
+        {
+          "userID": 3,
+          "username": "abbie",
+          "contents": "this is another comment"
+        }
+      ],
+      "numOfLikes": 3
     },
     {
       "_id": 2,
       "question": "Another question",
       "answer": "Another answer",
-      "user_id": 2
+      "user_id": 2,
+      "username": "abbie",
+      "comments": [
+        {
+          "userID": 5,
+          "username": "imogen",
+          "contents": "this is a comment"
+        },
+        {
+          "userID": 3,
+          "username": "emily",
+          "contents": "this is another comment"
+        }
+      ],
+      "numOfLikes": 4
     }
   ],
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -57,11 +85,17 @@ Returns a JSON object containing an array of all posts and a new JWT token.
   ```
 
 ## Notes
-- The endpoint requires authentication via JWT token
+- The endpoint requires authentication vai the JWT token (as shown in the required headers section)
 - Each post includes:
   - `_id`: The unique identifier of the post
   - `question`: The question text
   - `answer`: The answer text
   - `user_id`: The ID of the user who created the post
-- A new JWT token is returned with each successful response for token refresh purposes
-- The response includes all posts in the system, regardless of which user created them 
+  - `username`: The username of the user who created the post
+  - `comments`: An array of comments on the post, each with:
+    - `userID`: The ID of the user who made the comment
+    - `username`: The username of the user who made the comment
+    - `contents`: The content of the comment
+  - `numOfLikes`: The number of likes the post has received
+- A new JWT token is returned with each successful response for token refresh purposes, which can be used on future requests
+- The endpoint includes all posts in the system, regardless of which user created them 
