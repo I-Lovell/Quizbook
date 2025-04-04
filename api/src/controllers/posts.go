@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -115,26 +116,23 @@ func CreatePost(ctx *gin.Context) {
 	}
 
 	val, _ := ctx.Get("userID")
-	userID := val.(string)
+	userID, ok := val.(string)
+	if !ok {
+		SendInternalError(ctx, errors.New("userID is not a string"))
+		return
+	}
 
-	// The below fixes an error that was happening when trying to create a post
-	// The issue is: It's ALWAYS assigning the user_id of a post to 1 (when it should be the user_id of the logged in user)
-
-	// Create a User ID that is a valid uint
-	var userIDUint uint = 1 // Just default to user ID 1 if we can't parse
-
-	// Only try to parse if it looks like a number
-	if userID != "" && userID[0] >= '0' && userID[0] <= '9' {
-		parsed, err := strconv.ParseUint(userID, 10, 32)
-		if err == nil {
-			userIDUint = uint(parsed) // here is where we convert the string to a uint
-		}
+	// Convert userID string to uint for the database
+	parsed, err := strconv.ParseUint(userID, 10, 32)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
 	}
 
 	newPost := models.Post{
 		Question: requestBody.Question,
 		Answer:   requestBody.Answer,
-		UserID:   userIDUint,
+		UserID:   uint(parsed),
 	}
 
 	_, err = newPost.Save()

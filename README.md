@@ -1,3 +1,5 @@
+Added dependencies to use Zod for Authentication and React-Hook-Form
+
 ## Acebook Go/React Template
 
 In this project, you are task with working on an existing application. A
