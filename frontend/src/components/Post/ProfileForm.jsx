@@ -17,7 +17,8 @@ const ProfileForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await updateProfile(data);
+      const token = localStorage.getItem("token");
+      const response = await updateProfile(data, token);
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("root", {
