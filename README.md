@@ -70,7 +70,7 @@ Follow the instructions here: https://go.dev/doc/install
    brew services start postgresql
    ```
 
-7. Crecd ate your databases:
+7. Create your databases:
    ```
    createdb acebook
    createdb acebook_test
