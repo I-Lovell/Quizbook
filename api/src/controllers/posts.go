@@ -171,11 +171,47 @@ func GetPostsByUserID(ctx *gin.Context) {
 	// Convert posts to JSON Structs
 	jsonPosts := make([]JSONPost, 0)
 	for _, post := range *posts {
+		// Fetch the post author's username
+		author, err := models.FindUser(strconv.Itoa(int(post.UserID)))
+		authorUsername := "Unknown" 
+		if err == nil {
+			authorUsername = author.Username
+		}
+		comments, err := models.FetchCommentsByPostID(post.ID)
+		if err != nil {
+			SendInternalError(ctx, err)
+			return
+		}
+		jsonComments := make([]PostCommentJSON, 0)
+		for _, comment := range *comments {
+			user, err := models.FindUser(strconv.Itoa(int(comment.UserID)))
+			username := "Unknown"
+			if err == nil {
+				username = user.Username
+			}
+			jsonComments = append(jsonComments, PostCommentJSON{
+                UserID:   comment.UserID,
+                Username: username,
+                Contents: comment.Content,
+            })
+		}
+
+		likes, err := models.FetchLikesByPostID(post.ID)
+        if err != nil {
+            SendInternalError(ctx, err)
+            return
+        }
+        numOfLikes := len(*likes)
+
+		
 		jsonPosts = append(jsonPosts, JSONPost{
 			ID:       post.ID,
 			Question: post.Question,
 			Answer:   post.Answer,
 			UserID:   post.UserID,
+			Username:   authorUsername,
+            Comments:   jsonComments,
+            NumOfLikes: numOfLikes,
 		})
 	}
 
