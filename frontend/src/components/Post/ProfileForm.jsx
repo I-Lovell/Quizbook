@@ -66,6 +66,7 @@ const ProfileForm = () => {
           />
         </div>
         <textarea name="bio" className="bio-edit" {...register("bio")} />
+        <br />
         <button
           disabled={isSubmitting}
           role="submit-button"
