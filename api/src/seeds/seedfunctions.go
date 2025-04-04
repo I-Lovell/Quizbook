@@ -6,23 +6,39 @@ import (
 )
 
 func SeedDatabase(db *gorm.DB)  {
+	//This function calls all the seed functions
 	UserSeeds(db)
 	PostSeeds(db)
 }
 
 func DropTablesifExist(db *gorm.DB)  {
-	// This function executes raw SQL to reseed the database with example data
-	// DO NOT INCLUDE IN main.go IF YOU HAVE DATA YOU WANT THAT LIVES OUTSIDE THE
-	//SEED FILE
-	
-	// Posts table
+	// This function executes raw SQL to drop all tables before reseeding
+
+	// likes table
+	var like models.Comment
+	check_likes := db.First(&like)
+
+	if check_likes.Error == nil {
+		db.Exec("DROP TABLE likes")
+	}
+
+	// comments table
+	var comment models.Comment
+	check_comments := db.First(&comment)
+
+	if check_comments.Error == nil {
+		db.Exec("DROP TABLE comments")
+	}
+
+	// posts table
 	var post models.Post
 	check_posts := db.First(&post)
 
 	if check_posts.Error == nil {
 		db.Exec("DROP TABLE posts CASCADE")
 	}
-	//Users table
+
+	//users table
 	var user models.User
 	check_users := db.First(&user)
 

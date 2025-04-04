@@ -8,6 +8,8 @@ import (
 )
 
 func PostSeeds(db *gorm.DB)  {
+	//Example Posts created below
+	//We create instances of the post model all within a slice to iterate over later
 	posts := []models.Post{
 		{UserID: 1, Question: "What is the capital city of australia?", Answer: "Canberra"},
 		{UserID: 5, Question: "Which famous crime writer wrote the script for Orson Welles 1949 film noir classic The Third Man?", Answer: "Graham Greene"},
@@ -18,6 +20,8 @@ func PostSeeds(db *gorm.DB)  {
 		{UserID: 2, Question: "Which cat is the best cat?", Answer: "My cat, her name is Mrs Biscuits."},
 	}
 
+	//Here we iterate over the slice of posts, save each to a database and print
+	//either a confirmation or error
 	for _, post := range posts {
 		err := db.Save(&post).Error
 		if err != nil {

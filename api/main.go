@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/env"
@@ -14,16 +17,21 @@ func main() {
 
 	app := setupApp()
 
-	
 	models.OpenDatabaseConnection()
 
-	// !! WILL DROP ALL TABLES WHEN MAIN RUNS !! //
-	seeds.DropTablesifExist(models.Database)
-	// !! WILL DROP ALL TABLES WHEN MAIN RUNS !! //
+	args := os.Args[1:]
 
+	for _, arg := range args {
+		if arg == "seed" {
+			seeds.Reseed(models.Database)
+		} else {
+			fmt.Println("INCORRECT COMMAND LINE ARGUMENT, did you mean 'seed'?")
+		}
+	}
+	
+	
 	models.AutoMigrateModels()
 
-	seeds.SeedDatabase(models.Database)
 	app.Run(":8082")
 }
 
@@ -42,3 +50,5 @@ func setupCORS(app *gin.Engine) {
 
 	app.Use(cors.New(config))
 }
+
+
