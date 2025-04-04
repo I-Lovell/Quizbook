@@ -1,7 +1,8 @@
 import React from "react";
-import { useCurrentUser } from "../contexts/CurrentUserContext";
-import { updateProfile } from "../services/profile";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import { updateProfile } from "../../services/profile";
 import { useForm, Controller } from "react-hook-form";
+import "./ProfilePicture.css";
 
 const ProfileForm = () => {
   const { currentUser } = useCurrentUser();

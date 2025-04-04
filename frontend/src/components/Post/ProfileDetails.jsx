@@ -1,5 +1,6 @@
 import React from "react";
-import { useCurrentUser } from "../contexts/CurrentUserContext";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import "./ProfilePicture.css";
 
 const ProfileDetails = ({ toggleEdit }) => {
   const { currentUser } = useCurrentUser();

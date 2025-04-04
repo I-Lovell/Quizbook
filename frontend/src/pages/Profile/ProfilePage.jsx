@@ -2,8 +2,8 @@ import { useState } from "react";
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
 import "./ProfilePage.css";
 import "../Background.css";
-import ProfileForm from "../../components/ProfileForm";
-import ProfileDetails from "../../components/ProfileDetails";
+import ProfileForm from "../../components/Post/ProfileForm";
+import ProfileDetails from "../../components/Post/ProfileDetails";
 
 export const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
