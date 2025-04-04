@@ -8,6 +8,7 @@ export const Bio = ({ isEditing }) => {
     <header className="bio-container">
       {isEditing ? (
         <textarea
+          name="bio"
           className="bio-edit"
           value={bio}
           onChange={(event) => setBio(event.target.value)}

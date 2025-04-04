@@ -31,19 +31,18 @@ const ProfilePicture = ({ isEditing, token }) => {
 
   return (
     <div className="profile-picture-container">
-      <img
-        src={preview || "https://img.freepik.com/free-psd/cartoon-question-mark-isolated_23-2151568563.jpg?semt=ais_hybrid"}
-        alt="Profile"
-        className="profile-picture"
-      />
-      {isEditing && (
-        <>
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-          <button onClick={handleUpload} disabled={!profilePicture}>
-            Upload Picture
-          </button>
-        </>
-      )}
+      <div className="profile-picture-wrapper">
+        <img
+          src={preview || "https://img.freepik.com/free-psd/cartoon-question-mark-isolated_23-2151568563.jpg?semt=ais_hybrid"}
+          alt="Profile"
+          className="profile-picture"
+        />
+        
+        <div className="profile-picture-overlay">
+          UPDATE
+        </div>
+        <input type="file" accept="image/*" onChange={handleFileChange} className="profile-picture-input" />
+      </div>
     </div>
   );
 };
