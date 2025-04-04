@@ -32,7 +32,6 @@ func CreateToken(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Password incorrect"})
 		return
 	}
-
 	token, err := auth.GenerateToken(fmt.Sprintf("%d", user.ID))
 	if err != nil {
 		SendInternalError(ctx, err)
