@@ -35,15 +35,7 @@ func CreateUser(ctx *gin.Context) {
 	// ============================= Save the user to the database ================================
 	_, err = newUser.Save()
 	if err != nil {
-		if strings.Contains(err.Error(), "username") {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Username taken by other user"})
-		} else if strings.Contains(err.Error(), "email") {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Email taken by other user"})
-		} else if strings.Contains(err.Error(), "password") {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"message":"Password taken by other user"})
-		} else {
-			SendInternalError(ctx, err)
-		}
+		CheckForDuplicateKeyError(ctx, err)
 		return
 	}
 
