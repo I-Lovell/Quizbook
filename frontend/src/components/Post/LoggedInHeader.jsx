@@ -12,6 +12,7 @@ export const LoggedInHeader = ({ onLogout }) => {
       </div>
       <nav className="nav">
         <Link to="/posts" className="nav-button">Home</Link>
+        <Link to="/profile" className="nav-button">Profile</Link>
         <button onClick={onLogout} className="nav-button">Logout</button>
       </nav>
     </header>

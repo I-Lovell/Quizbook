@@ -21,6 +21,8 @@ export const login = async (email, password) => {
   if (response.status === 201) {
     let data = await response.json();
     return data.token;
+  } else if (response.status === 401) {
+    throw new Error("Invalid email or password");
   } else {
     throw new Error(
       `Received status ${response.status} when logging in. Expected 201`
@@ -28,7 +30,7 @@ export const login = async (email, password) => {
   }
 };
 
-export const signup = async (email, password, username, firstName, surname) => {
+export const signup = async (email, password, username) => {
   const payload = {
     email: email,
     password: password,

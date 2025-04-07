@@ -48,3 +48,14 @@ func FetchPostsByUserID(userID uint) (*[]Post, error) {
 
 	return &posts, nil
 }
+
+func FetchPostByID(id uint) (*Post, error) {
+	var post Post
+	err := Database.First(&post, id).Error
+
+	if err != nil {
+		return &Post{}, err
+	}
+
+	return &post, nil
+}

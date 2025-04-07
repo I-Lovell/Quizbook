@@ -1,28 +1,35 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./CreateAccount.css";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../services/authentication";
+import { set, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+const schema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(3, "Password must be at least 3 characters long"),
+  username: z.string().min(3, "Username must be at least 3 characters long"),
+});
 
 export const CreateAccount = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({ resolver: zodResolver(schema) });
 
-  const handleEmailChange = (event) => setEmail(event.target.value);
-  const handlePasswordChange = (event) => setPassword(event.target.value);
-  const handleUsernameChange = (event) => setUsername(event.target.value);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const onSubmit = async (data) => {
+    const { email, password, username } = data;
     try {
-      await signup(email, password, username, firstName, surname);
-      console.log("redirecting...:");
+      await signup(email, password, username);
       navigate("/login");
     } catch (err) {
-      console.error(err);
+      setError("root", {
+        message: err.message,
+      });
       navigate("/signup");
     }
   };
@@ -32,32 +39,44 @@ export const CreateAccount = () => {
       <header className="account-details">
         <h1 className="create-account-title">Create Account</h1>
       </header>
-      <form className="form" onSubmit={handleSubmit}>
-        <input
-          className="input"
-          placeholder="Username"
-          id="username"
-          type="username"
-          value={username}
-          onChange={handleUsernameChange}
-        />
-        <input
-          className="input"
-          placeholder="Email"
-          id="email"
-          type="text"
-          value={email}
-          onChange={handleEmailChange}
-        />
-        <input
-          className="input"
-          placeholder="Password"
-          id="password"
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-        <input role="submit-button" id="submit" type="submit" value="Submit" />
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        {errors.root && <span className="error">{errors.root.message}</span>}
+        <div>
+          <input
+            className="input"
+            placeholder="Username"
+            {...register("username")}
+          />
+          {errors.username && (
+            <span className="error">{errors.username.message}</span>
+          )}
+        </div>
+        <div>
+          <input className="input" placeholder="Email" {...register("email")} />
+          {errors.email && (
+            <span className="error">{errors.email.message}</span>
+          )}
+        </div>
+        <div>
+          <input
+            className="input"
+            placeholder="Password"
+            id="password"
+            type="password"
+            {...register("password")}
+          />
+          {errors.password && (
+            <span className="error">{errors.password.message}</span>
+          )}
+        </div>
+        <button
+          disabled={isSubmitting}
+          role="submit-button"
+          id="submit"
+          type="submit"
+        >
+          {isSubmitting ? "Signing up..." : "Sign Up"}
+        </button>
       </form>
       <p className="signup-text">
         Already have an account?{" "}
