@@ -12,6 +12,7 @@ export const FeedPage = () => {
   const [content, setContent] = useState({ question: "", answer: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  console.log(posts);
 
   useEffect(() => {
     const token = localStorage.getItem("token");

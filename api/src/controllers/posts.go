@@ -309,3 +309,73 @@ func GetCurrentUserPosts(ctx *gin.Context) {
 	token, _ := auth.GenerateToken(userID)
 	ctx.JSON(http.StatusOK, gin.H{"posts": jsonPosts, "token": token})
 }
+
+func GetPostByID(ctx *gin.Context) {
+	postIDParam := ctx.Param("id")
+	postID, err := strconv.ParseUint(postIDParam, 10, 32)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid post ID"})
+		return
+	}
+
+	post, err := models.FetchPostByID(uint(postID))
+	if err != nil {
+		if err.Error() == "record not found" { // if there's no post with that ID
+			ctx.JSON(http.StatusNotFound, gin.H{"message": "Post not found"})
+		} else {
+			SendInternalError(ctx, err)
+		}
+		return
+	}
+
+	// Fetch the post author's username
+	author, err := models.FindUser(strconv.Itoa(int(post.UserID)))
+	authorUsername := "Unknown"
+	if err == nil {
+		authorUsername = author.Username
+	}
+
+	// Grab comments for the post
+	comments, err := models.FetchCommentsByPostID(post.ID)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+	jsonComments := make([]PostCommentJSON, 0)
+	for _, comment := range *comments {
+		user, err := models.FindUser(strconv.Itoa(int(comment.UserID)))
+		username := "Unknown"
+		if err == nil {
+			username = user.Username
+		}
+		jsonComments = append(jsonComments, PostCommentJSON{
+			UserID:   comment.UserID,
+			Username: username,
+			Contents: comment.Content,
+		})
+	}
+
+	// Grab likes for the post
+	likes, err := models.FetchLikesByPostID(post.ID)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+	numOfLikes := len(*likes)
+
+	jsonPost := JSONPost{
+		ID:         post.ID,
+		Question:   post.Question,
+		Answer:     post.Answer,
+		UserID:     post.UserID,
+		Username:   authorUsername,
+		Comments:   jsonComments,
+		NumOfLikes: numOfLikes,
+	}
+
+	val, _ := ctx.Get("userID")
+	userID := val.(string)
+	token, _ := auth.GenerateToken(userID)
+
+	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost, "token": token})
+}
