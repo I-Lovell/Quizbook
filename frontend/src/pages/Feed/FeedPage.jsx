@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
 import { getPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
+import "../Background.css";
 import CreatePost from "../../components/Post/CreatePost/";
 import Modal from "../../components/Modal/Modal";
 
