@@ -286,7 +286,7 @@ func DeleteUser(ctx *gin.Context) {
 		return
 	}
 	// Delete the user from the database
-	err = models.Deleteuser(uint(userID))
+	err = models.DeleteUser(uint(userID))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete user"})
 		return
