@@ -2,23 +2,40 @@ import React from "react";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import { updateProfile } from "../../services/profile";
 import { useForm, Controller } from "react-hook-form";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ProfilePicture.css";
 
 const ProfileForm = () => {
-  const { currentUser } = useCurrentUser();
+  const { currentUser, updateCurrentUser } = useCurrentUser();
+  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(true);
   const {
     register,
     handleSubmit,
     setError,
-    getValues,
     control,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      profilePicture: currentUser?.profilePicture || "",
+      bio: currentUser?.bio || "",
+    },
+  });
 
   const onSubmit = async (data) => {
     try {
       const token = localStorage.getItem("token");
       const response = await updateProfile(data, token);
+      window.location.reload();
+
+      updateCurrentUser({
+        ...currentUser,
+        profilePicture: data.profilePicture,
+        bio: data.bio,
+      });
+
+      navigate("/profile");
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("root", {

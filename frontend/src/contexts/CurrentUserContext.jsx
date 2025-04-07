@@ -1,10 +1,24 @@
-import { createContext, useContext } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const CurrentUserContext = createContext();
 
-export const CurrentUserProvider = ({ user, children }) => {
+export const CurrentUserProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (savedUser) {
+      setCurrentUser(savedUser);
+    }
+  }, []);
+
+  const updateCurrentUser = (updatedUser) => {
+    setCurrentUser(updatedUser);
+    localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+  };
+
   return (
-    <CurrentUserContext.Provider value={user}>
+    <CurrentUserContext.Provider value={{ currentUser, updateCurrentUser }}>
       {children}
     </CurrentUserContext.Provider>
   );

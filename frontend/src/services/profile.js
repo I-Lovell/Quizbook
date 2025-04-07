@@ -9,7 +9,7 @@ export const getSelf = async (token) => {
     },
   };
 
-  const response = await fetch(`${BACKEND_URL}/users/me`, requestOptions);
+  const response = await fetch(`${BACKEND_URL}/users`, requestOptions);
 
   if (response.status !== 200) {
     throw new Error("Unable to fetch profile");
