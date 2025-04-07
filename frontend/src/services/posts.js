@@ -62,7 +62,7 @@ export const getSinglePostByID = async (token, post_id) => {
     
     if (!response.ok) {
       const errorText = await response.text().catch(() => "No error details");
-      // console.error("Error response:", errorText);
+      console.error("Error response:", errorText);
       throw new Error(`Failed to fetch post: ${response.status} ${response.statusText}`);
     }
 
