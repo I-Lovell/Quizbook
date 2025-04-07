@@ -12,7 +12,7 @@ type User struct {
 	FirstName         string `json:"firstName" gorm:"size:50"`
 	Surname           string `json:"surname" gorm:"size:50"`
 	Bio               string `json:"bio"`
-	ProfilePictureURL string `json:"profile_picture_url" gorm:"size:255"`
+	ProfilePictureURL string `json:"profilePicture" gorm:"size:255"`
 	Posts             []Post
 	Comments          []Comment
 	Likes             []Like
@@ -44,6 +44,27 @@ func FindUserByEmail(email string) (*User, error) {
 
 	if err != nil {
 		return &User{}, err
+	}
+
+	return &user, nil
+}
+
+func UpdateUser(id uint, updates map[string]interface{}) (*User, error) {
+	var user User
+
+	// First find the user
+	if err := Database.First(&user, id).Error; err != nil {
+		return nil, err
+	}
+
+	// Attempt to update the user in the database
+	if err := Database.Model(&user).Updates(updates).Error; err != nil {
+		return nil, err
+	}
+
+	// Refresh user data
+	if err := Database.First(&user, id).Error; err != nil {
+		return nil, err
 	}
 
 	return &user, nil

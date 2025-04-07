@@ -13,11 +13,15 @@ import (
 )
 
 func main() {
+	// Load environment variables	
 	env.LoadEnv()
 
+	// Setup the application
 	app := setupApp()
 
+	// Open the database connection
 	models.OpenDatabaseConnection()
+
 
 	args := os.Args[1:]
 
@@ -30,14 +34,19 @@ func main() {
 	}
 	
 	
+
 	models.AutoMigrateModels()
 
+	// Start the server
 	app.Run(":8082")
 }
 
 func setupApp() *gin.Engine {
 	app := gin.Default()
 	setupCORS(app)
+	
+	app.Static("/uploads", "./uploads") // used to serve the profile pictures
+	
 	routes.SetupRoutes(app)
 	return app
 }
