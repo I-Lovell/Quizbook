@@ -12,7 +12,7 @@ type User struct {
 	FirstName         string `json:"firstName" gorm:"size:50"`
 	Surname           string `json:"surname" gorm:"size:50"`
 	Bio               string `json:"bio"`
-	ProfilePictureURL string `json:"profile_picture_url" gorm:"size:255"`
+	ProfilePictureURL string `json:"profilePicture" gorm:"size:255"`
 	Posts             []Post
 	Comments          []Comment
 	Likes             []Like

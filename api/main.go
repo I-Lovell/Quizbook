@@ -9,26 +9,28 @@ import (
 )
 
 func main() {
+	// Load environment variables	
 	env.LoadEnv()
 
+	// Setup the application
 	app := setupApp()
 
+	// Open the database connection
 	models.OpenDatabaseConnection()
+
+	// Auto migrate the models
 	models.AutoMigrateModels()
 
-	// // Create a test testPost. Delete these lines when you are creating posts of your own.
-	// testPost := models.Post{
-	// 	Question: fmt.Sprintf("This is a test question created at %v!", time.Now()),
-	// 	Answer: "This is a test answer for the question above.",
-	// }
-	// testPost.Save()
-
+	// Start the server
 	app.Run(":8082")
 }
 
 func setupApp() *gin.Engine {
 	app := gin.Default()
 	setupCORS(app)
+	
+	app.Static("/uploads", "./uploads") // used to serve the profile pictures
+	
 	routes.SetupRoutes(app)
 	return app
 }
