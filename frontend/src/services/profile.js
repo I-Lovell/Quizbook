@@ -9,7 +9,7 @@ export const getSelf = async (token) => {
     },
   };
 
-  const response = await fetch(`${BACKEND_URL}/users`, requestOptions);
+  const response = await fetch(`${BACKEND_URL}/users/me`, requestOptions);
 
   if (response.status !== 200) {
     throw new Error("Unable to fetch profile");
@@ -36,4 +36,20 @@ export const updateProfile = async (updates, token) => {
       `Received status ${response.status} when updating profile. Expected 201`
     );
   }
+};
+
+export const deleteProfile = async (token) => {
+  const response = await fetch("https://your-api-url.com/users/me", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete profile");
+  }
+
+  return response.json();
 };

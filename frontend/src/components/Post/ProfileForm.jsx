@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
-import { updateProfile } from "../../services/profile";
+import { updateProfile, deleteProfile } from "../../services/profile";
 import { useForm, Controller } from "react-hook-form";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ProfilePicture.css";
 
 const ProfileForm = () => {
   const { currentUser, updateCurrentUser } = useCurrentUser();
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
   const {
     register,
     handleSubmit,
@@ -27,7 +26,7 @@ const ProfileForm = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await updateProfile(data, token);
-      window.location.reload();
+      console.log("Profile updated successfully:", response);
 
       updateCurrentUser({
         ...currentUser,
@@ -41,6 +40,31 @@ const ProfileForm = () => {
       setError("root", {
         message: "Failed to update profile. Please try again.",
       });
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+    if (confirmDelete) {
+      try {
+        setIsDeleting(true);
+        const token = localStorage.getItem("token");
+        const response = await deleteProfile(token);
+        console.log("Account deleted successfully:", response);
+
+        updateCurrentUser(null);
+        localStorage.removeItem("token");
+
+        navigate("/login");
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        setError("root", {
+          message: "Failed to delete account. Please try again.",
+        });
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -92,6 +116,15 @@ const ProfileForm = () => {
           type="submit"
         >
           {isSubmitting ? "Saving changes..." : "Save changes"}
+        </button>
+        <br />
+        <button
+          type="button"
+          className="delete-account-button"
+          onClick={handleDelete}
+          disabled={isDeleting}
+        >
+          {isDeleting ? "Deleting..." : "Delete Account"}
         </button>
       </form>
     </div>
