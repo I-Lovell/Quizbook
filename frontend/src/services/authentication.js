@@ -1,4 +1,3 @@
-// docs: https://vitejs.dev/guide/env-and-mode.html
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const login = async (email, password) => {
@@ -17,7 +16,6 @@ export const login = async (email, password) => {
 
   const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
 
-  // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
   if (response.status === 201) {
     let data = await response.json();
     return data.token;
@@ -47,12 +45,20 @@ export const signup = async (email, password, username) => {
 
   let response = await fetch(`${BACKEND_URL}/users`, requestOptions);
 
-  // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
   if (response.status === 201) {
     return;
   } else {
-    throw new Error(
-      `Received status ${response.status} when signing up. Expected 201`
-    );
+    const data = await response.json();
+    if (data?.error?.includes("Email")) {
+      throw new Error(
+        "This email is associated with an existing account. Try signing in."
+      );
+    } else if (data?.error?.includes("Username")) {
+      throw new Error("Username is taken. Please try another name.");
+    } else {
+      throw new Error(
+        `Received status ${response.status} when signing up. Expected 201`
+      );
+    }
   }
 };
