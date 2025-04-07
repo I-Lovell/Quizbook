@@ -37,3 +37,19 @@ export const updateProfile = async (updates, token) => {
     );
   }
 };
+
+export const deleteProfile = async (token) => {
+  const response = await fetch("https://your-api-url.com/users/me", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete profile");
+  }
+
+  return response.json();
+};

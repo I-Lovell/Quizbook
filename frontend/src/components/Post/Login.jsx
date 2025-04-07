@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../../services/authentication";
+import { login as loginService } from "../../services/authentication";
 import "./Login.css";
 import { useForm } from "react-hook-form";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const { login } = useCurrentUser();
   const {
     register,
     handleSubmit,
@@ -15,8 +17,8 @@ export const Login = () => {
   const handleLogin = async (data) => {
     const { email, password } = data;
     try {
-      const token = await login(email, password);
-      localStorage.setItem("token", token);
+      const token = await loginService(email, password);
+      login(token);
       navigate("/posts");
     } catch (err) {
       console.error(err);

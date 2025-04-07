@@ -173,3 +173,95 @@ func saveProfilePicture(base64Image string, userID uint) (string, error) {
 	// ================ Return the URL path that will be used to access the image =================
 	return "/uploads/profile_pictures/" + filename, nil
 }
+
+// The below frunction does the opposite of the saveProfilePicture function
+// It converts the image to a base64 string so that it can be sent to the frontend
+func convertImageToBase64(imagePath string) (string, error) {
+	// Remove the leading slash if present to get the correct file path
+	cleanPath := strings.TrimPrefix(imagePath, "/")
+
+	// Check if file exists
+	if _, err := os.Stat(cleanPath); os.IsNotExist(err) {
+		return "", nil // Return empty string if file doesn't exist
+	}
+
+	// Read the file content
+	fileData, err := ioutil.ReadFile(cleanPath)
+	if err != nil {
+		return "", err
+	}
+
+	// Determine the content type based on file extension
+	contentType := "image/jpeg" // Default
+	if strings.HasSuffix(imagePath, ".png") {
+		contentType = "image/png"
+	} else if strings.HasSuffix(imagePath, ".gif") {
+		contentType = "image/gif"
+	}
+
+	// Encode to base64
+	base64Data := base64.StdEncoding.EncodeToString(fileData)
+
+	// Return as data URI
+	return fmt.Sprintf("data:%s;base64,%s", contentType, base64Data), nil
+}
+
+// Returns the currently logged in user's information
+func GetCurrentUser(ctx *gin.Context) {
+	// Get user ID from context
+	userIDStr, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+		return
+	}
+
+	// Check if userID is nil
+	if userIDStr == nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "User ID is nil"})
+		return
+	}
+
+	// Safely convert to string
+	userIDString, ok := userIDStr.(string)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid user ID format"})
+		return
+	}
+
+	// Fetch the user from the database using the existing FindUser function
+	user, err := models.FindUser(userIDString)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// Convert profile picture path to base64 if it exists
+	var profilePictureBase64 string
+	if user.ProfilePictureURL != "" {
+		profilePictureBase64, err = convertImageToBase64(user.ProfilePictureURL)
+		if err != nil {
+			// Just log the error and continue, don't fail the whole request
+			fmt.Printf("Error converting profile image to base64: %v\n", err)
+		}
+	}
+
+	// Generate a new token for the user
+	val, _ := ctx.Get("userID")
+	tokenUserID := val.(string)
+	token, _ := auth.GenerateToken(tokenUserID)
+
+	// Create user data map
+	userData := gin.H{
+		"ID":             user.ID,
+		"username":       user.Username,
+		"email":          user.Email,
+		"firstName":      user.FirstName,
+		"surname":        user.Surname,
+		"bio":            user.Bio,
+		"profilePicture": profilePictureBase64,
+		"Posts":          user.Posts,
+	}
+
+	// Return user data and token in the requested format
+	ctx.JSON(http.StatusOK, gin.H{"user": userData, "token": token})
+}

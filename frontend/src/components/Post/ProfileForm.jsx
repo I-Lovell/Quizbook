@@ -1,29 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
-import { updateProfile } from "../../services/profile";
+import { updateProfile, deleteProfile } from "../../services/profile";
 import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import "./ProfilePicture.css";
 
 const ProfileForm = () => {
-  const { currentUser } = useCurrentUser();
+  const { currentUser, token, refreshUser, logout } = useCurrentUser();
+  const navigate = useNavigate();
+  const [isDeleting, setIsDeleting] = useState(false);
   const {
     register,
     handleSubmit,
     setError,
-    getValues,
     control,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      profilePicture: currentUser?.profilePicture || "",
+      bio: currentUser?.bio || "",
+    },
+  });
 
   const onSubmit = async (data) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await updateProfile(data, token);
+      await updateProfile(data, token);
+
+      // Refresh user data from the server to get the updated profile
+      await refreshUser();
+
+      window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("root", {
         message: "Failed to update profile. Please try again.",
       });
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+    if (confirmDelete) {
+      try {
+        setIsDeleting(true);
+        const response = await deleteProfile(token);
+        console.log("Account deleted successfully:", response);
+
+        logout();
+        navigate("/login");
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        setError("root", {
+          message: "Failed to delete account. Please try again.",
+        });
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -75,6 +108,15 @@ const ProfileForm = () => {
           type="submit"
         >
           {isSubmitting ? "Saving changes..." : "Save changes"}
+        </button>
+        <br />
+        <button
+          type="button"
+          className="delete-account-button"
+          onClick={handleDelete}
+          disabled={isDeleting}
+        >
+          {isDeleting ? "Deleting..." : "Delete Account"}
         </button>
       </form>
     </div>
