@@ -7,11 +7,9 @@ import { useParams } from "react-router";
 import "./SinglePost.css";
 
 export const SinglePost = () => {
-    const [post, setPost] = useState([]);
+    let [post, setPost] = useState(null);
     const navigate = useNavigate();
-    let post_id_object = useParams();
-    let post_id = post_id_object.post_id;
-    // console.log(post);
+    let { post_id } = useParams();
     // console.log(post_id);
     
     useEffect(() => {
@@ -20,7 +18,7 @@ export const SinglePost = () => {
     
         getSinglePostByID(token, post_id)
           .then((data) => {
-            setPost(data.posts);
+            setPost(data.post);
             localStorage.setItem("token", data.token);
           })
           .catch((err) => {
@@ -39,9 +37,7 @@ export const SinglePost = () => {
         <LoggedInHeader onLogout={logOutHandler} />
         <h2>Post</h2>
         <div className="feed" role="feed">
-        {post.map((post) => (
-          <Post post={post} key={post._id} />
-        ))};
+        {post ? <Post post={post} key={post._id} /> : <p>Loading post...</p>}
         </div>
       </div>
     )
