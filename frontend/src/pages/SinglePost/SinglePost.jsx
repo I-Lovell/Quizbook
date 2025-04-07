@@ -23,7 +23,11 @@ export const SinglePost = () => {
           })
           .catch((err) => {
             console.error(err);
-            navigate("/login");
+            if (err.message === "Post not found") {
+              navigate("/posts"); // Redirect to FeedPage if post is not found
+            } else {
+              navigate("/login"); // Redirect to login for other errors
+            }
           });
       }, [navigate, post_id]);
     

@@ -60,6 +60,10 @@ export const getSinglePostByID = async (token, post_id) => {
     const response = await fetch(`${BACKEND_URL}/posts/${post_id}`, requestOptions);
     // console.log("Response status:", response.status);
     
+    if (response.status === 404) {
+      throw new Error("Post not found"); // Specific error for 404
+    }
+
     if (!response.ok) {
       const errorText = await response.text().catch(() => "No error details");
       console.error("Error response:", errorText);
