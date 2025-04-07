@@ -41,3 +41,21 @@ export const createPost = async (token, question, answer) => {
 
   return response.json();
 }
+
+export const getSinglePostByID = async (token, post_id) =>{
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/posts/${post_id}`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch posts");
+  }
+
+  const data = await response.json();
+  return data;
+};
