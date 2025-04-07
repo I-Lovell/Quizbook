@@ -7,11 +7,12 @@ import { useParams } from "react-router";
 import "./SinglePost.css";
 
 export const SinglePost = () => {
-    const [post, setPosts] = useState([]);
+    const [post, setPost] = useState([]);
     const navigate = useNavigate();
-    let post_id = useParams();
-    console.log(post);
-    console.log(post_id);
+    let post_id_object = useParams();
+    let post_id = post_id_object.post_id;
+    // console.log(post);
+    // console.log(post_id);
     
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -19,7 +20,7 @@ export const SinglePost = () => {
     
         getSinglePostByID(token, post_id)
           .then((data) => {
-            setPosts(data.posts);
+            setPost(data.posts);
             localStorage.setItem("token", data.token);
           })
           .catch((err) => {
