@@ -35,24 +35,9 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState(null);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setCurrentUser(token);
-      getSelf(token)
-        .then((user) => {
-          setCurrentUser(user);
-        })
-        .catch((err) => {
-          console.error("Error fetching user data:", err);
-          setCurrentUser(null);
-        });
-    }
-  }, []);
   return (
     <>
-      <CurrentUserProvider user={{ currentUser, setCurrentUser }}>
+      <CurrentUserProvider>
         <RouterProvider router={router} />
       </CurrentUserProvider>
     </>

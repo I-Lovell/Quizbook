@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./ProfilePicture.css";
 
 const ProfileForm = () => {
-  const { currentUser, updateCurrentUser } = useCurrentUser();
+  const { currentUser, token, refreshUser, logout } = useCurrentUser();
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
   const {
@@ -24,17 +24,12 @@ const ProfileForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await updateProfile(data, token);
-      console.log("Profile updated successfully:", response);
+      await updateProfile(data, token);
 
-      updateCurrentUser({
-        ...currentUser,
-        profilePicture: data.profilePicture,
-        bio: data.bio,
-      });
+      // Refresh user data from the server to get the updated profile
+      await refreshUser();
 
-      navigate("/profile");
+      window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("root", {
@@ -50,13 +45,10 @@ const ProfileForm = () => {
     if (confirmDelete) {
       try {
         setIsDeleting(true);
-        const token = localStorage.getItem("token");
         const response = await deleteProfile(token);
         console.log("Account deleted successfully:", response);
 
-        updateCurrentUser(null);
-        localStorage.removeItem("token");
-
+        logout();
         navigate("/login");
       } catch (error) {
         console.error("Error deleting account:", error);

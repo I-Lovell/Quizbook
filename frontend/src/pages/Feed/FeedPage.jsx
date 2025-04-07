@@ -6,30 +6,30 @@ import Post from "../../components/Post/Post";
 import "../Background.css";
 import CreatePost from "../../components/Post/CreatePost/";
 import Modal from "../../components/Modal/Modal";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
 
 export const FeedPage = () => {
   const [posts, setPosts] = useState([]);
   const [content, setContent] = useState({ question: "", answer: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const { token, logout } = useCurrentUser();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (!token) return navigate("/login");
 
     getPosts(token)
       .then((data) => {
         setPosts(data.posts);
-        localStorage.setItem("token", data.token);
       })
       .catch((err) => {
         console.error(err);
         navigate("/login");
       });
-  }, [navigate]);
+  }, [navigate, token]);
 
   const logOutHandler = () => {
-    localStorage.removeItem("token");
+    logout();
     navigate("/");
   };
 
@@ -40,7 +40,9 @@ export const FeedPage = () => {
     <div className="home">
       <LoggedInHeader onLogout={logOutHandler} />
       <h2>Posts</h2>
-      <button onClick={openModal} className="new-post-button">Make a New Post</button>
+      <button onClick={openModal} className="new-post-button">
+        Make a New Post
+      </button>
       {isModalOpen && (
         <Modal closeModal={closeModal}>
           <CreatePost content={content} setContent={setContent} />
