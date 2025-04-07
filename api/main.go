@@ -1,11 +1,15 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/env"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 	"github.com/makersacademy/go-react-acebook-template/api/src/routes"
+	"github.com/makersacademy/go-react-acebook-template/api/src/seeds"
 )
 
 func main() {
@@ -18,7 +22,19 @@ func main() {
 	// Open the database connection
 	models.OpenDatabaseConnection()
 
-	// Auto migrate the models
+
+	args := os.Args[1:]
+
+	for _, arg := range args {
+		if arg == "seed" {
+			seeds.Reseed(models.Database)
+		} else {
+			fmt.Println("INCORRECT COMMAND LINE ARGUMENT, did you mean 'seed'?")
+		}
+	}
+	
+	
+
 	models.AutoMigrateModels()
 
 	// Start the server
@@ -43,3 +59,5 @@ func setupCORS(app *gin.Engine) {
 
 	app.Use(cors.New(config))
 }
+
+

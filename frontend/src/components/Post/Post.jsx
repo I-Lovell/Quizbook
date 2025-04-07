@@ -10,7 +10,7 @@ const Post = (props) => {
 
   return (
     <article className="post-box">
-      <div className="post-user-id">User ID: {props.post.user_id}</div>
+      <div className="post-user-id">Created by: {props.post.username}</div>
       <div className="post-content">
         <p className="post-question"><strong>Question:</strong> {props.post.question}</p>
         {showAnswer ? (

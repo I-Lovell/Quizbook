@@ -21,8 +21,6 @@ func CreateToken(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}
 
-	fmt.Println(input)
-
 	user, err := models.FindUserByEmail(input.Email)
 	if err != nil {
 		SendInternalError(ctx, err)

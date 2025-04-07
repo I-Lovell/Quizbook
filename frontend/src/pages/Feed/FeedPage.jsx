@@ -13,7 +13,11 @@ export const FeedPage = () => {
   const [content, setContent] = useState({ question: "", answer: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+
   const { token, logout } = useCurrentUser();
+
+  console.log(posts);
+
 
   useEffect(() => {
     if (!token) return navigate("/login");
