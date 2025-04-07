@@ -96,7 +96,7 @@ func GetAllPosts(ctx *gin.Context) {
 		})
 	}
 
-	// ========================== send response (including token) ================================
+	// ============================ Send response (including token) ================================
 	ctx.JSON(http.StatusOK, gin.H{"posts": jsonPosts, "token": token})
 }
 
