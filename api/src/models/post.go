@@ -1,19 +1,17 @@
 package models
 
 import (
-	"fmt"
-
 	"gorm.io/gorm"
 )
 
 type Post struct {
 	gorm.Model
-	UserID    uint      `json:"user_id"`
-	User      User      `json:"user"`
-	Question  string    `json:"question"`
-	Answer    string    `json:"answer"`
-	Comments  []Comment `json:"comments"`
-	Likes     []Like    `json:"likes"`
+	UserID   uint      `json:"user_id"`
+	User     User      `json:"user"`
+	Question string    `json:"question"`
+	Answer   string    `json:"answer"`
+	Comments []Comment `json:"comments"`
+	Likes    []Like    `json:"likes"`
 }
 
 func (post *Post) Save() (*Post, error) {
@@ -28,8 +26,6 @@ func (post *Post) Save() (*Post, error) {
 func FetchAllPosts() (*[]Post, error) {
 	var posts []Post
 	err := Database.Find(&posts).Error
-
-	fmt.Println(posts)
 
 	if err != nil {
 		return &[]Post{}, err
