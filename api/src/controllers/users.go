@@ -35,7 +35,7 @@ func CreateUser(ctx *gin.Context) {
 	// ============================= Save the user to the database ================================
 	_, err = newUser.Save()
 	if err != nil {
-		SendInternalError(ctx, err)
+		CheckForDuplicateKeyError(ctx, err)
 		return
 	}
 
@@ -118,7 +118,6 @@ func UpdateUser(ctx *gin.Context) {
 	// ===================== Send a success message to the frontend (with token) ==================
 	ctx.JSON(http.StatusCreated, gin.H{"message": "User updated successfully", "token": token})
 }
-
 
 // the below helper function handles saves the base64 image (which is sent as a string
 // from the frontend) to the api/uploads directory (so that we can store a path in the DB)
@@ -264,4 +263,33 @@ func GetCurrentUser(ctx *gin.Context) {
 
 	// Return user data and token in the requested format
 	ctx.JSON(http.StatusOK, gin.H{"user": userData, "token": token})
+}
+
+func DeleteUser(ctx *gin.Context) {
+	userIDstr, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+		return
+	}
+	if userIDstr == nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "User ID nil"})
+		return
+	}
+	userIDstring, ok := userIDstr.(string)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid user ID format"})
+		return
+	}
+	userID, err := strconv.ParseUint(userIDstring, 10, 64)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+	// Delete the user from the database
+	err = models.DeleteUser(uint(userID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete user"})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
 }

@@ -16,14 +16,23 @@ export const ProfilePage = () => {
     navigate("/login");
   };
   return (
-    <div className="home">
+    <div className="profile-page-layout">
       <div className="backim"></div>
+
       <LoggedInHeader onLogout={logOutHandler} />
-      {isEditing ? (
-        <ProfileForm />
-      ) : (
-        <ProfileDetails toggleEdit={() => setIsEditing(true)} />
-      )}
+      <div className="profile-content">
+        <div className="profile-left">
+          {isEditing ? (
+            <ProfileForm />
+          ) : (
+            <ProfileDetails toggleEdit={() => setIsEditing(true)} />
+          )}
+        </div>
+        <div className="vertical-line"></div>
+        <div className="profile-right">
+          <p>This is where user posts will go.</p>
+        </div>
+      </div>
     </div>
   );
 };
