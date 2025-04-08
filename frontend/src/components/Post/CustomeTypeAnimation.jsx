@@ -1,11 +1,12 @@
 import { TypeAnimation as RawTypeAnimation } from "react-type-animation";
-import "./TypeAnimation.css";
 
-const TypeAnimation = ({
+const CustomTypeAnimation = ({
   sequence,
   wrapper = "span",
   cursor = true,
   repeat = Infinity,
+  speed = 50,
+  style = {},
 }) => {
   return (
     <RawTypeAnimation
@@ -13,8 +14,10 @@ const TypeAnimation = ({
       wrapper={wrapper}
       cursor={cursor}
       repeat={repeat}
+      speed={speed}
+      style={style}
     />
   );
 };
 
-export default TypeAnimation;
+export default CustomTypeAnimation;
