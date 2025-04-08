@@ -53,6 +53,8 @@ type createLikeRequestBody struct {
 }
 
 func CreateLike(ctx *gin.Context) {
+
+	// ========== Get request body ==========
 	var requestBody createLikeRequestBody
 	err := ctx.BindJSON(&requestBody)
 
@@ -61,6 +63,7 @@ func CreateLike(ctx *gin.Context) {
 		return
 	}
 
+	// ============ Get user ID =============
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
 	userIDUint, err := strconv.ParseUint(userID, 10, 32)
@@ -70,38 +73,41 @@ func CreateLike(ctx *gin.Context) {
 		return
 	}
 
-	// Check if a like already exists for this user and post
-	existingLike, err := models.FindLikeByUserIDAndPostID(uint(userIDUint), requestBody.PostID)
-	
-	// Toggle like status
+	// =========== Generate token ===========
 	token, _ := auth.GenerateToken(userID)
-	
+
+	// ========== Check if a like already exists for this user and post ==========
+	existingLike, err := models.FindLikeByUserIDAndPostID(uint(userIDUint), requestBody.PostID)
+
+	// ========== Toggle like status ==========
 	if err == nil && existingLike != nil {
-		// Like exists, so unlike (delete it)
-		err = existingLike.Delete()
+		// Case 1: Like exists, so unlike (delete it)
+		err = existingLike.Delete() // gorm does this by adding to the deleted_at column
 		if err != nil {
 			SendInternalError(ctx, err)
 			return
 		}
+		// ========== Send success message ==========
 		ctx.JSON(http.StatusOK, gin.H{"message": "Like removed", "token": token})
 		return
-	} else if err != nil && err.Error() != "record not found" {
-		// Unexpected error
-		SendInternalError(ctx, err)
-		return
-	}
-
-	// Like doesn't exist, so create it
-	newLike := models.Like{
-		PostID: requestBody.PostID,
-		UserID: uint(userIDUint),
-	}
-
-	_, err = newLike.Save()
-	if err != nil {
-		SendInternalError(ctx, err)
-		return
-	}
-
+		} else if err != nil && err.Error() != "record not found" {
+			SendInternalError(ctx, err) // this should never happen
+			return
+		}
+		
+		// Case 2: Like doesn't exist, so create it
+		newLike := models.Like{
+			PostID: requestBody.PostID,
+			UserID: uint(userIDUint),
+		}
+		
+		// and then save the new like to the DB
+		_, err = newLike.Save()
+		if err != nil {
+			SendInternalError(ctx, err)
+			return
+		}
+		
+		// ========== Send success message ==========
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Like created", "token": token})
 } 
