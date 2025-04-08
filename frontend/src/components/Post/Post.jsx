@@ -25,7 +25,7 @@ const Post = (props) => {
   //const fetchLikes = async () => {
   //  const token = localStorage.getItem("token");
   //  if (!token) return alert("You must be logged in to view likes.");
-//
+  //
   //  try {
   //    const data = await getLikes(token);
   //    setLikes(data.likes);
@@ -38,16 +38,25 @@ const Post = (props) => {
     <article className="post-box">
       <div className="post-user-id">Created by: {props.post.username}</div>
       <div className="post-content">
-        <p className="post-question"><strong>Question:</strong> {props.post.question}</p>
+        <p className="post-question">
+          <strong>Question:</strong> {props.post.question}
+        </p>
         {showAnswer ? (
-          <p className="post-answer"><strong>Answer:</strong> {props.post.answer}</p>
+          <p className="post-answer">
+            <strong>Answer:</strong> {props.post.answer}
+          </p>
         ) : (
-          <button className="reveal-answer-button" onClick={toggleAnswerVisibility}>
+          <button
+            className="reveal-answer-button"
+            onClick={toggleAnswerVisibility}
+          >
             Show Answer
           </button>
         )}
         <p className="like-count">Likes: {likes}</p>
-        <button className="like-button" onClick={likePost}>Like</button>
+        <button className="like-button" onClick={likePost}>
+          Like
+        </button>
       </div>
     </article>
   );

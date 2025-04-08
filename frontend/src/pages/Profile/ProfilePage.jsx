@@ -18,7 +18,6 @@ export const ProfilePage = () => {
 
   useEffect(() => {
     if (!token) return navigate("/login");
-    console.log(token);
 
     fetchSelfPosts(token)
       .then((data) => {
@@ -60,7 +59,7 @@ export const ProfilePage = () => {
           ) : (
             <div className="feed" role="feed">
               {userPosts.map((post) => (
-                <Post post={post} key={post._id} />
+                <Post post={post} key={post._id} hideUsername={true} />
               ))}
             </div>
           )}
