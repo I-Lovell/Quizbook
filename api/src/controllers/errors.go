@@ -15,7 +15,7 @@ func SendInternalError(ctx *gin.Context, err error) {
 	}
 }
 
-// ======= Checks if username, email or password are already taken when user signs up ============
+// ======= Checks if username or email are already taken when user signs up ============
 
 func CheckForDuplicateKeyError(ctx *gin.Context, err error) {
 	if strings.Contains(err.Error(), "username") {
