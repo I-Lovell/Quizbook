@@ -7,6 +7,7 @@ import "../Background.css";
 import CreatePost from "../../components/Post/CreatePost/";
 import Modal from "../../components/Modal/Modal";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import "./FeedPage.css";
 
 export const FeedPage = () => {
   const [posts, setPosts] = useState([]);
