@@ -35,7 +35,7 @@ func CreateUser(ctx *gin.Context) {
 	// ============================= Save the user to the database ================================
 	_, err = newUser.Save()
 	if err != nil {
-		SendInternalError(ctx, err)
+		CheckForDuplicateKeyError(ctx, err)
 		return
 	}
 

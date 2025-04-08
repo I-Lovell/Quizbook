@@ -15,7 +15,7 @@ func OpenDatabaseConnection() {
 	fmt.Println(connection_string)
 
 	var err error
-	Database, err = gorm.Open(postgres.Open(connection_string), &gorm.Config{})
+	Database, err = gorm.Open(postgres.Open(connection_string), &gorm.Config{TranslateError: false})
 
 	if err != nil {
 		panic(err)
