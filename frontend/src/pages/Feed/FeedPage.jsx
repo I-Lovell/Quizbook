@@ -20,10 +20,14 @@ export const FeedPage = () => {
 
     getPosts(token)
       .then((data) => {
+        // Helper function that iterates all the posts received from backend,
+        // and sorts the posts by newest first in descending order
         let sortedPosts= data.posts.sort((a, b) => {        
         // Create the date objects
           const dateA = new Date(a.created_at);
           const dateB = new Date(b.created_at);
+        // Compare the dates, it's dateB - dateA to sort in descending order
+        // If dateB is more recent than dateA, it pops dateB to the top of the array and vice versa
           return dateB - dateA;
         });
         setPosts(sortedPosts);
