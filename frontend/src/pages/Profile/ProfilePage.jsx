@@ -19,7 +19,7 @@ export const ProfilePage = () => {
     <div className="profile-page-layout">
       <div className="backim"></div>
 
-      <LoggedInHeader />
+      <LoggedInHeader onLogout={logOutHandler} />
       <div className="profile-content">
         <div className="profile-left">
           {isEditing ? (
@@ -33,14 +33,6 @@ export const ProfilePage = () => {
           <p>This is where user posts will go.</p>
         </div>
       </div>
-
-      <LoggedInHeader onLogout={logOutHandler} />
-      {isEditing ? (
-        <ProfileForm />
-      ) : (
-        <ProfileDetails toggleEdit={() => setIsEditing(true)} />
-      )}
-
     </div>
   );
 };
