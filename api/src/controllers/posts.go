@@ -226,6 +226,7 @@ func GetPostsByUserID(ctx *gin.Context) {
 			Username:   authorUsername,
 			Comments:   jsonComments,
 			NumOfLikes: numOfLikes,
+			CreatedAt:  post.CreatedAt.Format(time.RFC3339),
 		})
 	}
 
@@ -304,6 +305,7 @@ func GetCurrentUserPosts(ctx *gin.Context) {
 			Username:   authorUsername,
 			Comments:   jsonComments,
 			NumOfLikes: numOfLikes,
+			CreatedAt:  post.CreatedAt.Format(time.RFC3339),
 		})
 	}
 
@@ -373,6 +375,7 @@ func GetPostByID(ctx *gin.Context) {
 		Username:   authorUsername,
 		Comments:   jsonComments,
 		NumOfLikes: numOfLikes,
+		CreatedAt:  post.CreatedAt.Format(time.RFC3339),
 	}
 
 	val, _ := ctx.Get("userID")
