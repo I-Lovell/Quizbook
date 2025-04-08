@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { getSelf } from "../services/profile";
 
+// This context is used to manage the current user state and provide it to the rest of the app without having to use a prop each time
 const CurrentUserContext = createContext();
 
 export const CurrentUserProvider = ({ children }) => {
