@@ -22,18 +22,6 @@ const Post = (props) => {
     }
   };
 
-  //const fetchLikes = async () => {
-  //  const token = localStorage.getItem("token");
-  //  if (!token) return alert("You must be logged in to view likes.");
-  //
-  //  try {
-  //    const data = await getLikes(token);
-  //    setLikes(data.likes);
-  //  } catch (err) {
-  //    console.error("Error fetching likes:", err);
-  //  }
-  //};
-
   return (
     <article className="post-box">
       <div className="post-user-id">Created by: {props.post.username}</div>
