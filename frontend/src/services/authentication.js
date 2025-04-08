@@ -49,11 +49,11 @@ export const signup = async (email, password, username) => {
     return;
   } else {
     const data = await response.json();
-    if (data?.error?.includes("Email")) {
+    if (data?.message?.includes("Email")) {
       throw new Error(
         "This email is associated with an existing account. Try signing in."
       );
-    } else if (data?.error?.includes("Username")) {
+    } else if (data?.message?.includes("Username")) {
       throw new Error("Username is taken. Please try another name.");
     } else {
       throw new Error(
