@@ -5,6 +5,7 @@ import { getSinglePostByID } from "../../services/posts";
 import Post from "../../components/Post/Post";
 import { useParams } from "react-router";
 import "./SinglePost.css";
+import "../Background.css";
 
 export const SinglePost = () => {
     let [post, setPost] = useState(null);
@@ -23,7 +24,11 @@ export const SinglePost = () => {
           })
           .catch((err) => {
             console.error(err);
-            navigate("/login");
+            if (err.message === "Post not found") {
+              navigate("/posts"); // Redirect to FeedPage if post is not found
+            } else {
+              navigate("/login"); // Redirect to login for other errors
+            }
           });
       }, [navigate, post_id]);
     
@@ -34,6 +39,7 @@ export const SinglePost = () => {
     
     return (
       <div className="home">
+        <div className="backim"></div>
         <LoggedInHeader onLogout={logOutHandler} />
         <h2>Post</h2>
         <div className="feed" role="feed">

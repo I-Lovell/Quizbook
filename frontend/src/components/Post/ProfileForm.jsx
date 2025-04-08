@@ -26,7 +26,7 @@ const ProfileForm = () => {
     try {
       await updateProfile(data, token);
 
-      // Refresh user data from the server to get the updated profile
+      // Refreshes user data to get the updated profile
       await refreshUser();
 
       window.location.reload();

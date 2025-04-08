@@ -22,9 +22,7 @@ export const login = async (email, password) => {
   } else if (response.status === 401) {
     throw new Error("Invalid email or password");
   } else {
-    throw new Error(
-      `Received status ${response.status} when logging in. Expected 201`
-    );
+    throw new Error(`Invalid email or password`);
   }
 };
 
@@ -54,6 +52,7 @@ export const signup = async (email, password, username) => {
         "This email is associated with an existing account. Try signing in."
       );
     } else if (data?.message?.includes("Username")) {
+
       throw new Error("Username is taken. Please try another name.");
     } else {
       throw new Error(

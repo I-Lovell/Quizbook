@@ -10,6 +10,7 @@ import { CurrentUserProvider } from "./contexts/CurrentUserContext";
 import { useEffect, useState } from "react";
 import { getSelf } from "./services/profile";
 import { SinglePost } from "./pages/SinglePost/SinglePost";
+import { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 
 // What is this? Docs here: https://reactrouter.com/en/main/start/overview
 const router = createBrowserRouter([
@@ -36,7 +37,11 @@ const router = createBrowserRouter([
   { 
     path: "/posts/:post_id",
     element: <SinglePost />,
-  }
+  },
+  {
+    path: "*", 
+    element: <NotFoundPage />, // Render the custom 404 page for invalid routes
+  },
 ]);
 
 const App = () => {

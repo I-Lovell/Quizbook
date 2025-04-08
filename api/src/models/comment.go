@@ -8,7 +8,7 @@ type Comment struct {
 	gorm.Model
 	Content string `json:"content"`
 	PostID  uint   `json:"post_id"`
-	UserID  uint   `json:"user_id"`
+	UserID  uint   `json:"user_id" gorm:"constraint:OnDelete:CASCADE"`
 	Post    Post   `json:"-"`
 	User    User   `json:"-"`
 }
