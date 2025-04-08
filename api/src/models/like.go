@@ -27,4 +27,20 @@ func FetchLikesByPostID(postID uint) (*[]Like, error) {
 		return &[]Like{}, err
 	}
 	return &likes, nil
+}
+
+// This is used to check if a user has already liked a post
+// It returns the like if it exists, otherwise it returns nil
+// This helps give us the like/unlike functionality on the frontend
+func FindLikeByUserIDAndPostID(userID uint, postID uint) (*Like, error) {
+	var like Like
+	err := Database.Where("user_id = ? AND post_id = ?", userID, postID).First(&like).Error
+	if err != nil {
+		return nil, err 
+	}
+	return &like, nil
+}
+
+func (like *Like) Delete() error {
+	return Database.Delete(like).Error
 } 

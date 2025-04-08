@@ -70,6 +70,28 @@ func CreateLike(ctx *gin.Context) {
 		return
 	}
 
+	// Check if a like already exists for this user and post
+	existingLike, err := models.FindLikeByUserIDAndPostID(uint(userIDUint), requestBody.PostID)
+	
+	// Toggle like status
+	token, _ := auth.GenerateToken(userID)
+	
+	if err == nil && existingLike != nil {
+		// Like exists, so unlike (delete it)
+		err = existingLike.Delete()
+		if err != nil {
+			SendInternalError(ctx, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{"message": "Like removed", "token": token})
+		return
+	} else if err != nil && err.Error() != "record not found" {
+		// Unexpected error
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// Like doesn't exist, so create it
 	newLike := models.Like{
 		PostID: requestBody.PostID,
 		UserID: uint(userIDUint),
@@ -80,8 +102,6 @@ func CreateLike(ctx *gin.Context) {
 		SendInternalError(ctx, err)
 		return
 	}
-
-	token, _ := auth.GenerateToken(userID)
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Like created", "token": token})
 } 
