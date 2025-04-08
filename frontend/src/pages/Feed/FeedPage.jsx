@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import LoggedInHeader from "../../components/Post/LoggedInHeader";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import { redirect, useNavigate } from "react-router-dom";
 import { getPosts } from "../../services/posts";
-import Post from "../../components/Post/Post";
-import "../Background.css";
+import LoggedInHeader from "../../components/Post/LoggedInHeader";
+// import Post from "../../components/Post/Post";
+import PostPreview from "../../components/Post/PostPreview";
 import CreatePost from "../../components/Post/CreatePost/";
 import Modal from "../../components/Modal/Modal";
-import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import "../Background.css";
 import "./FeedPage.css";
 
 export const FeedPage = () => {
-  const [posts, setPosts] = useState([]);
+  const [postPreview, setPosts] = useState([]);
   const [content, setContent] = useState({ question: "", answer: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -62,8 +63,8 @@ export const FeedPage = () => {
         </Modal>
       )}
       <div className="feed" role="feed">
-        {posts.map((post) => (
-          <Post post={post} key={post._id} />
+        {postPreview.map((post) => (
+          <PostPreview post={post} key={post._id} />
         ))}
       </div>
     </div>
