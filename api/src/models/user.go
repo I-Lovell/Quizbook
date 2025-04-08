@@ -69,3 +69,19 @@ func UpdateUser(id uint, updates map[string]interface{}) (*User, error) {
 
 	return &user, nil
 }
+
+func DeleteUser(id uint) error {
+	var user User
+
+	// Find the user 
+	if err := Database.First(&user, id).Error; err != nil {
+			return err
+		}
+
+	// Delete the user record from the database
+	if err := Database.Delete(&user).Error; err != nil {
+		return err 
+	}
+
+	return nil 
+}

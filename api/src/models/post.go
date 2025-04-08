@@ -6,7 +6,7 @@ import (
 
 type Post struct {
 	gorm.Model
-	UserID   uint      `json:"user_id"`
+	UserID   uint      `json:"user_id" gorm:"constraint:OnDelete:CASCADE"`
 	User     User      `json:"user"`
 	Question string    `json:"question"`
 	Answer   string    `json:"answer"`
