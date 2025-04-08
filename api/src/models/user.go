@@ -30,7 +30,6 @@ func (user *User) Save() (*User, error) {
 func FindUser(id string) (*User, error) {
 	var user User
 	err := Database.Where("id = ?", id).First(&user).Error
-
 	if err != nil {
 		return &User{}, err
 	}
