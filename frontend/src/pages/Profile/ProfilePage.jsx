@@ -4,14 +4,21 @@ import "./ProfilePage.css";
 import "../Background.css";
 import ProfileForm from "../../components/Post/ProfileForm";
 import ProfileDetails from "../../components/Post/ProfileDetails";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import { useNavigate } from "react-router-dom";
 
 export const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
-
+  const navigate = useNavigate();
+  const { token, logout } = useCurrentUser();
+  const logOutHandler = () => {
+    logout();
+    navigate("/login");
+  };
   return (
     <div className="home">
       <div className="backim"></div>
-      <LoggedInHeader />
+      <LoggedInHeader onLogout={logOutHandler} />
       {isEditing ? (
         <ProfileForm />
       ) : (
