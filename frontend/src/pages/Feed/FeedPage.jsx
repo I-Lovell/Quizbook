@@ -3,7 +3,6 @@ import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import { redirect, useNavigate } from "react-router-dom";
 import { getPosts } from "../../services/posts";
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
-// import Post from "../../components/Post/Post";
 import PostPreview from "../../components/Post/PostPreview";
 import CreatePost from "../../components/Post/CreatePost/";
 import Modal from "../../components/Modal/Modal";
