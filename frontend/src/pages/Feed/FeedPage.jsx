@@ -13,18 +13,20 @@ export const FeedPage = () => {
   const [content, setContent] = useState({ question: "", answer: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-
   const { token, logout } = useCurrentUser();
-
-  console.log(posts);
-
 
   useEffect(() => {
     if (!token) return navigate("/login");
 
     getPosts(token)
       .then((data) => {
-        setPosts(data.posts);
+        let sortedPosts= data.posts.sort((a, b) => {        
+        // Create the date objects
+          const dateA = new Date(a.created_at);
+          const dateB = new Date(b.created_at);
+          return dateB - dateA;
+        });
+        setPosts(sortedPosts);
       })
       .catch((err) => {
         console.error(err);
@@ -37,11 +39,13 @@ export const FeedPage = () => {
     navigate("/");
   };
 
+  // Functions that handle opening and closing the modal
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="home">
+      <div className="backim"></div>
       <LoggedInHeader onLogout={logOutHandler} />
       <h2>Posts</h2>
       <button onClick={openModal} className="new-post-button">

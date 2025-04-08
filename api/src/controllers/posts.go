@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
@@ -24,6 +25,7 @@ type JSONPost struct {
 	Username   string            `json:"username"`
 	Comments   []PostCommentJSON `json:"comments"`
 	NumOfLikes int               `json:"numOfLikes"`
+	CreatedAt  string            `json:"created_at"`
 }
 
 func GetAllPosts(ctx *gin.Context) {
@@ -93,6 +95,7 @@ func GetAllPosts(ctx *gin.Context) {
 			Username:   authorUsername,
 			Comments:   jsonComments,
 			NumOfLikes: numOfLikes,
+			CreatedAt:  post.CreatedAt.Format(time.RFC3339),
 		})
 	}
 
@@ -176,13 +179,12 @@ func GetPostsByUserID(ctx *gin.Context) {
 	tokenUserID := val.(string)
 	token, _ := auth.GenerateToken(tokenUserID)
 
-
 	// ============================= Convert posts to JSON Structs ==============================
 	jsonPosts := make([]JSONPost, 0)
 	for _, post := range *posts {
 		// Grab the post author's username
 		author, err := models.FindUser(strconv.Itoa(int(post.UserID)))
-		authorUsername := "Unknown" 
+		authorUsername := "Unknown"
 		if err == nil {
 			authorUsername = author.Username
 		}
@@ -201,29 +203,29 @@ func GetPostsByUserID(ctx *gin.Context) {
 				username = user.Username
 			}
 			jsonComments = append(jsonComments, PostCommentJSON{
-                UserID:   comment.UserID,
-                Username: username,
-                Contents: comment.Content,
-            })
+				UserID:   comment.UserID,
+				Username: username,
+				Contents: comment.Content,
+			})
 		}
 
 		// Grab likes for the post
 		likes, err := models.FetchLikesByPostID(post.ID)
-        if err != nil {
-            SendInternalError(ctx, err)
-            return
-        }
-        numOfLikes := len(*likes)
+		if err != nil {
+			SendInternalError(ctx, err)
+			return
+		}
+		numOfLikes := len(*likes)
 
 		// ========================= Append to JSON posts for response ============================
 		jsonPosts = append(jsonPosts, JSONPost{
-			ID:       post.ID,
-			Question: post.Question,
-			Answer:   post.Answer,
-			UserID:   post.UserID,
+			ID:         post.ID,
+			Question:   post.Question,
+			Answer:     post.Answer,
+			UserID:     post.UserID,
 			Username:   authorUsername,
-            Comments:   jsonComments,
-            NumOfLikes: numOfLikes,
+			Comments:   jsonComments,
+			NumOfLikes: numOfLikes,
 		})
 	}
 
@@ -253,24 +255,24 @@ func GetCurrentUserPosts(ctx *gin.Context) {
 		SendInternalError(ctx, err)
 		return
 	}
-	
+
 	// ============================= Convert posts to JSON Structs ==============================
 	jsonPosts := make([]JSONPost, 0)
 	for _, post := range *posts {
 		// Fetch the post author's username
 		author, err := models.FindUser(strconv.Itoa(int(post.UserID)))
-		authorUsername := "Unknown" 
+		authorUsername := "Unknown"
 		if err == nil {
 			authorUsername = author.Username
 		}
-		
+
 		// Fetch comments for the post
 		comments, err := models.FetchCommentsByPostID(post.ID)
 		if err != nil {
 			SendInternalError(ctx, err)
 			return
 		}
-		
+
 		jsonComments := make([]PostCommentJSON, 0)
 		for _, comment := range *comments {
 			user, err := models.FindUser(strconv.Itoa(int(comment.UserID)))
@@ -292,7 +294,7 @@ func GetCurrentUserPosts(ctx *gin.Context) {
 			return
 		}
 		numOfLikes := len(*likes)
-		
+
 		// ========================= Append to JSON posts for response ================================
 		jsonPosts = append(jsonPosts, JSONPost{
 			ID:         post.ID,
