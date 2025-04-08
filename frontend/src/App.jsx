@@ -7,8 +7,6 @@ import { SignupPage } from "./pages/Signup/SignupPage";
 import { FeedPage } from "./pages/Feed/FeedPage";
 import { ProfilePage } from "./pages/Profile/ProfilePage";
 import { CurrentUserProvider } from "./contexts/CurrentUserContext";
-import { useEffect, useState } from "react";
-import { getSelf } from "./services/profile";
 import { SinglePost } from "./pages/SinglePost/SinglePost";
 import { NotFoundPage } from "./pages/NotFound/NotFoundPage";
 
@@ -34,12 +32,12 @@ const router = createBrowserRouter([
     path: "/profile",
     element: <ProfilePage />,
   },
-  { 
+  {
     path: "/posts/:post_id",
     element: <SinglePost />,
   },
   {
-    path: "*", 
+    path: "*",
     element: <NotFoundPage />, // Render the custom 404 page for invalid routes
   },
 ]);

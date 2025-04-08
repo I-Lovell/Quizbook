@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	// Load environment variables	
+	// Load environment variables
 	env.LoadEnv()
 
 	// Setup the application
@@ -22,9 +22,9 @@ func main() {
 	// Open the database connection
 	models.OpenDatabaseConnection()
 
-
+	// Check if the seed argument is provided
+	// if so, reseed the database
 	args := os.Args[1:]
-
 	for _, arg := range args {
 		if arg == "seed" {
 			seeds.Reseed(models.Database)
@@ -32,9 +32,8 @@ func main() {
 			fmt.Println("INCORRECT COMMAND LINE ARGUMENT, did you mean 'seed'?")
 		}
 	}
-	
-	
 
+	// Migrate the database
 	models.AutoMigrateModels()
 
 	// Start the server
@@ -44,9 +43,9 @@ func main() {
 func setupApp() *gin.Engine {
 	app := gin.Default()
 	setupCORS(app)
-	
+
 	app.Static("/uploads", "./uploads") // used to serve the profile pictures
-	
+
 	routes.SetupRoutes(app)
 	return app
 }
@@ -59,5 +58,3 @@ func setupCORS(app *gin.Engine) {
 
 	app.Use(cors.New(config))
 }
-
-

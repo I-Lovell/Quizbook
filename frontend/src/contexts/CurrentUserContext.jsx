@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { getSelf } from "../services/profile";
 
+// This context is used to manage the current user state and provide it to the rest of the app without having to use a prop each time
 const CurrentUserContext = createContext();
 
 export const CurrentUserProvider = ({ children }) => {
@@ -34,7 +35,6 @@ export const CurrentUserProvider = ({ children }) => {
     }
   }, []);
 
-  // Initial load
   useEffect(() => {
     if (token) {
       fetchUserData(token);
@@ -45,6 +45,10 @@ export const CurrentUserProvider = ({ children }) => {
       }
     }
   }, [token, fetchUserData]);
+
+  useEffect(() => {
+    console.log("Current User in Context:", currentUser);
+  }, [currentUser]);
 
   const login = useCallback((newToken) => {
     localStorage.setItem("token", newToken);
@@ -85,4 +89,15 @@ export const useCurrentUser = () => {
     throw new Error("useCurrentUser must be used within a CurrentUserProvider");
   }
   return context;
+};
+
+export const getCurrentUserId = (token) => {
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (currentUser && currentUser.user_id) {
+    return currentUser.user_id;
+  }
+
+  console.error("No current user found in localStorage.");
+  return null;
 };

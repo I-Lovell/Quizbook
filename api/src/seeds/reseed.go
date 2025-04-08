@@ -5,14 +5,10 @@ import (
 	"gorm.io/gorm"
 )
 
-//This function combines and calls our other seed functions, dropping all tables
-//migrating the database to recreate the tables and then filling them with our seeddata
-func Reseed(db *gorm.DB)  {
-	// !! WILL DROP ALL TABLES !! //
-	DropTablesifExist(db)
-	// !! WILL DROP ALL TABLES !! //
-
-	models.AutoMigrateModels()
-
-	SeedDatabase(db)
+// This function combines and calls our other seed functions, dropping all tables
+// migrating the database to recreate the tables and then filling them with our seeddata
+func Reseed(db *gorm.DB) {
+	DropTablesifExist(db)		// Drop all tables if they exist
+	models.AutoMigrateModels()	// Create all tables if they don't exist
+	SeedDatabase(db)			// Seed the database with initial data
 }
