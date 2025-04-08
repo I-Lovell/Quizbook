@@ -1,4 +1,5 @@
 import { createPost } from '../../services/posts'; // Adjust the path if necessary
+import "./CreatePost.css";
 
 const CreatePost = ({ content, setContent }) => {
   const handleQuestionChange = (event) => {
@@ -26,13 +27,14 @@ const CreatePost = ({ content, setContent }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="create-post-form" onSubmit={handleSubmit}>
       <input 
         id="question"
         type="text"
         value={content.question || ''}
         onChange={handleQuestionChange}
         placeholder="Enter your question"
+        className="create-post-input"
       />
       <input
         id="answer"
@@ -40,8 +42,11 @@ const CreatePost = ({ content, setContent }) => {
         value={content.answer || ''}
         onChange={handleAnswerChange}
         placeholder="Enter your answer"
+        className="create-post-input"
       />
-      <input role="submit-button" id="submit" type="submit" value="Submit" />
+      <button role="submit-button" id="submit" type="submit" className="create-post-button">
+        Submit
+      </button>
     </form>
   );
 };

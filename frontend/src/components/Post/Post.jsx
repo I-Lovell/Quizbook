@@ -1,12 +1,38 @@
 import { useState } from "react";
+import { createLike } from "../../services/likes"; // Import the like service
 import "./Post.css";
 
 const Post = (props) => {
   const [showAnswer, setShowAnswer] = useState(false);
+  const [likes, setLikes] = useState(props.post.numOfLikes); // Local state for likes
 
   const toggleAnswerVisibility = () => {
     setShowAnswer((prev) => !prev);
   };
+
+  const likePost = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return alert("You must be logged in to like a post.");
+
+    try {
+      await createLike(token, props.post._id); // Call the backend to register the like
+      setLikes((prevLikes) => prevLikes + 1); // Update the frontend dynamically
+    } catch (err) {
+      console.error("Error liking post:", err);
+    }
+  };
+
+  //const fetchLikes = async () => {
+  //  const token = localStorage.getItem("token");
+  //  if (!token) return alert("You must be logged in to view likes.");
+//
+  //  try {
+  //    const data = await getLikes(token);
+  //    setLikes(data.likes);
+  //  } catch (err) {
+  //    console.error("Error fetching likes:", err);
+  //  }
+  //};
 
   return (
     <article className="post-box">
@@ -20,6 +46,8 @@ const Post = (props) => {
             Show Answer
           </button>
         )}
+        <p className="like-count">Likes: {likes}</p>
+        <button className="like-button" onClick={likePost}>Like</button>
       </div>
     </article>
   );

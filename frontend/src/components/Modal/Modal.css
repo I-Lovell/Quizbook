@@ -4,28 +4,59 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6); /* Darker backdrop for better focus */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out; /* Smooth fade-in animation */
 }
 
 .modal-content {
   background: white;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 40px; /* Increased padding for better spacing */
+  border-radius: 12px; /* Rounded corners for a modern look */
   width: 90%;
   max-width: 500px;
   position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  animation: slideIn 0.3s ease-in-out; /* Slide-in animation */
 }
 
 .modal-close-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
   cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.modal-close-button:hover {
+  transform: scale(1.2); /* Slight zoom effect on hover */
+  color: #ff4d4d; /* Red color for hover state */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
