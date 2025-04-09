@@ -16,11 +16,11 @@ export const createLike = async (token, post_id) => {
 
   const response = await fetch(`${BACKEND_URL}/likes`, requestOptions);
 
-  if (response.status !== 201) {
-    throw new Error("Unable to like post");
+  if (response.status !== 201 && response.status !== 200) {
+    throw new Error("Unable to toggle like");
   }
 
-  return response.json();
+  return response.json(); // Return the backend response (e.g., "Like created" or "Like removed")
 };
 
 export const getLikes = async (token, post_id) => {
@@ -37,6 +37,5 @@ export const getLikes = async (token, post_id) => {
     throw new Error("Unable to fetch likes");
   }
 
-  const data = await response.json();
-  return data;
+  return response.json(); // Return the list of likes
 };

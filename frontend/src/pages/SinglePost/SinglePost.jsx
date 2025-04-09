@@ -7,11 +7,11 @@ import { useParams } from "react-router";
 import "./SinglePost.css";
 import "../Background.css";
 
+
 export const SinglePost = () => {
     let [post, setPost] = useState(null);
     const navigate = useNavigate();
     let { post_id } = useParams();
-    // console.log(post_id);
     
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -32,6 +32,7 @@ export const SinglePost = () => {
           });
       }, [navigate, post_id]);
     
+
       const logOutHandler = () => {
         localStorage.removeItem("token");
         navigate("/");
