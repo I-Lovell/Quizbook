@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LoggedInHeader from "../../components/Post/LoggedInHeader";
-import { getSinglePostByID } from "../../services/posts";
-import Post from "../../components/Post/Post";
 import { useParams } from "react-router";
+import { getSinglePostByID } from "../../services/posts";
+import LoggedInHeader from "../../components/Post/LoggedInHeader";
+import Post from "../../components/Post/Post";
 import "./SinglePost.css";
 import "../Background.css";
 

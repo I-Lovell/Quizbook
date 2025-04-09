@@ -5,10 +5,11 @@ import { HomePage } from "./pages/Home/HomePage";
 import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { FeedPage } from "./pages/Feed/FeedPage";
-import { ProfilePage } from "./pages/Profile/ProfilePage";
-import { CurrentUserProvider } from "./contexts/CurrentUserContext";
 import { SinglePost } from "./pages/SinglePost/SinglePost";
+import { ProfilePage } from "./pages/Profile/ProfilePage";
+import { OtherUsersProfilePage } from "./pages/Profile/OtherUsersProfilePage";
 import { NotFoundPage } from "./pages/NotFound/NotFoundPage";
+import { CurrentUserProvider } from "./contexts/CurrentUserContext";
 
 // What is this? Docs here: https://reactrouter.com/en/main/start/overview
 const router = createBrowserRouter([
@@ -29,12 +30,16 @@ const router = createBrowserRouter([
     element: <FeedPage />,
   },
   {
-    path: "/profile",
+    path: "/posts/:post_id",
+    element: <SinglePost />,
+  },
+  {
+    path: "/profile/me",
     element: <ProfilePage />,
   },
   {
-    path: "/posts/:post_id",
-    element: <SinglePost />,
+    path: "/profile/:user_id",
+    element: <OtherUsersProfilePage />,
   },
   {
     path: "*",
