@@ -46,9 +46,7 @@ export const CurrentUserProvider = ({ children }) => {
     }
   }, [token, fetchUserData]);
 
-  useEffect(() => {
-    console.log("Current User in Context:", currentUser);
-  }, [currentUser]);
+  useEffect(() => {}, [currentUser]);
 
   const login = useCallback((newToken) => {
     localStorage.setItem("token", newToken);
