@@ -10,16 +10,17 @@ import (
 )
 
 type JSONComment struct {
-	ID      uint   `json:"_id"`
-	Content string `json:"content"`
-	UserID  uint   `json:"user_id"`
-	PostID  uint   `json:"post_id"`
+	ID       uint   `json:"_id"`
+	Content  string `json:"content"`
+	UserID   uint   `json:"userID"`
+	Username string `json:"username"`
+	PostID   uint   `json:"post_id"`
 }
 
 func GetCommentsByPostID(ctx *gin.Context) {
 	postID := ctx.Param("post_id")
 	postIDUint, err := strconv.ParseUint(postID, 10, 32)
-	
+
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid post ID"})
 		return
@@ -39,11 +40,19 @@ func GetCommentsByPostID(ctx *gin.Context) {
 	// Convert comments to JSON Structs
 	jsonComments := make([]JSONComment, 0)
 	for _, comment := range *comments {
+		// Find the user who made the comment to get their username
+		username := "Unknown" // Default if user not found
+		user, err := models.FindUser(strconv.Itoa(int(comment.UserID)))
+		if err == nil {
+			username = user.Username
+		}
+
 		jsonComments = append(jsonComments, JSONComment{
-			ID:      comment.ID,
-			Content: comment.Content,
-			UserID:  comment.UserID,
-			PostID:  comment.PostID,
+			ID:       comment.ID,
+			Content:  comment.Content,
+			UserID:   comment.UserID,
+			Username: username,
+			PostID:   comment.PostID,
 		})
 	}
 
@@ -72,7 +81,7 @@ func CreateComment(ctx *gin.Context) {
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
 	userIDUint, err := strconv.ParseUint(userID, 10, 32)
-	
+
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
@@ -93,4 +102,4 @@ func CreateComment(ctx *gin.Context) {
 	token, _ := auth.GenerateToken(userID)
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Comment created", "token": token})
-} 
+}
