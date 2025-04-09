@@ -23,12 +23,12 @@ export const OtherUserProfilePage = () => {
       .then((data) => {
         if (!data.user) {
           console.error("User not found");
-          navigate("/login");
+          navigate("/posts");
         }
       })
       .catch((err) => {
         console.error(err);
-        navigate("/login");
+        navigate("/posts");
       });
 
     getPostsByUserID(user_id, token)
@@ -42,7 +42,7 @@ export const OtherUserProfilePage = () => {
       })
       .catch((err) => {
         console.error(err);
-        navigate("/login");
+        navigate("/posts");
       });
   }, [token, user_id, navigate]);
 
