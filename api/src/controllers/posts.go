@@ -501,3 +501,60 @@ func UpdatePost(ctx *gin.Context) {
 	token, _ := auth.GenerateToken(userID)
 	ctx.JSON(http.StatusOK, gin.H{"message": "Post updated successfully", "token": token})
 }
+
+func DeletePostByID(ctx *gin.Context) {
+
+	// ======================= Get the post ID from the URL ==============================
+	postIDParam := ctx.Param("id")
+	postID, err := strconv.ParseUint(postIDParam, 10, 32)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid post ID"})
+		return
+	}
+	// ==================== Get the user ID ====================
+	userIDstr, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+		return
+	}
+
+	// Convert userID to string
+	userIDstring, ok := userIDstr.(string)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid user ID format"})
+		return
+	}
+
+	// Convert userID to uint
+	userID, err := strconv.ParseUint(userIDstring, 10, 32)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ======================= Fetch the post by ID ============================================
+	post, err := models.FetchPostByID(uint(postID))
+	if err != nil {
+		if err.Error() == "record not found" {
+			ctx.JSON(http.StatusNotFound, gin.H{"message": "Post not found"})
+			return
+		}
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ==================== Check if the user is the owner of the post =========================
+	if post.UserID != uint(userID) {
+		ctx.JSON(http.StatusForbidden, gin.H{"message": "You are not authorised to delete this post"})
+		return
+	}
+
+	// ======================= Delete the post ================================================
+	err = models.DeletePost(uint(postID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete post"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Post deleted successfully"})
+}

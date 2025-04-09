@@ -76,3 +76,19 @@ func UpdatePost(id uint, updates map[string]interface{}) (*Post, error) {
 
 	return &post, nil
 }
+
+func DeletePost(id uint) error {
+	var post Post
+
+	// Find the post
+	if err := Database.First(&post, id).Error; err != nil {
+		return err
+	}
+
+	// Delete the post record from the database
+	if err := Database.Delete(&post).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
