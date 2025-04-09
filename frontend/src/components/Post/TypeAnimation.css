@@ -1,0 +1,100 @@
+.TypeAnimation1 {
+  font-size: 3.0rem;
+  font-weight: bold;
+  color: #4d7452;
+  text-align: left;
+  margin: 0;
+  padding: 20px 0;
+  z-index: -1;
+}
+
+.TypeAnimation2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #4d7452;
+  padding-right: 20px;
+  text-align: right;
+  margin: 20px 0;
+  padding: 20px 0;
+  z-index: -1;
+}
+
+.TypeAnimation3 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #4d7452;
+  text-align: center;
+  margin: 20px 0;
+  padding: 20px 0;
+  padding-top: 10px;
+  z-index: -1;
+}
+
+.TypeAnimation1a {
+  font-size: 3.0rem;
+  font-weight: bold;
+  color: #4d7452;
+  text-align: left;
+  margin-top: 500px;
+  padding: 0px 0;
+  z-index: -1;
+  position: fixed;
+}
+
+.TypeAnimation3a {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #4d7452;
+  text-align: center;
+  margin: 20px 0;
+  padding: 20px 0;
+  top: 80px;
+  z-index: -1;
+  position: fixed;
+}
+
+.TypeAnimation3ab {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #4d7452;
+  text-align: center;
+  margin: 20px 0;
+  padding: 20px 0;
+  top: 500px;
+  z-index: -1;
+  position: fixed;
+}
+
+.TypeAnimation4 {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #4d7452;
+  text-align: left;
+  margin: 40px 0;
+  padding: 20px 0;
+  z-index: -1;
+  position: fixed;
+}
+
+.TypeAnimation4a {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #4d7452;
+  text-align: left;
+  margin-top: 500px 0;
+  padding: 100px 0;
+  z-index: -1;
+  position:fixed;
+}
+
+.TypeAnimation2a {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #4d7452;
+  padding-right: 10px;
+  text-align: right;
+  margin-top: 250px 0;
+  padding-bottom: 100;
+  z-index: -1;
+  position:fixed;
+}
