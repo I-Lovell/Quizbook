@@ -70,17 +70,33 @@ func UpdateUser(id uint, updates map[string]interface{}) (*User, error) {
 }
 
 func DeleteUser(id uint) error {
-	var user User
+	// Begin a transaction
+	tx := Database.Begin()
 
-	// Find the user 
-	if err := Database.First(&user, id).Error; err != nil {
-			return err
-		}
-
-	// Delete the user record from the database
-	if err := Database.Delete(&user).Error; err != nil {
-		return err 
+	// Soft delete the user's posts first
+	if err := tx.Where("user_id = ?", id).Delete(&Post{}).Error; err != nil {
+		tx.Rollback()
+		return err
 	}
 
-	return nil 
+	// Soft delete the user's likes
+	if err := tx.Where("user_id = ?", id).Delete(&Like{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Then soft delete the user's comments
+	if err := tx.Where("user_id = ?", id).Delete(&Comment{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Then soft delete the user
+	if err := tx.Delete(&User{}, id).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Commit the transaction
+	return tx.Commit().Error
 }
