@@ -1,11 +1,35 @@
 import { useState } from "react";
 import { createLike } from "../../services/likes"; // Import the like service
 import "./Post.css";
+import { createComment } from "../../services/comments"; // Import the comment service
+import { getComments } from "../../services/comments"; // Import the comment service
+import { useEffect } from "react";
+import Comment from "./Comments";
+import "./Comments.css";
 
 const Post = (props) => {
   const [showAnswer, setShowAnswer] = useState(false);
   const [likes, setLikes] = useState(props.post.numOfLikes); // Initialize likes from props
   const [isLiked, setIsLiked] = useState(props.post.liked); // Initialize isLiked from the new backend field
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState(props.post.comments || []);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const result = await getComments(token, props.post._id);
+        setComments(result.comments);
+      } catch (err) {
+        console.error("Error fetching comments:", err);
+      }
+    };
+
+    fetchComments();
+  }, [props.post._id]);
+
 
   const toggleLike = async () => {
     const token = localStorage.getItem("token");
@@ -27,6 +51,25 @@ const Post = (props) => {
     }
   };
 
+
+  const submitComment = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return alert("You must be logged in to comment.");
+
+    if (!comment.trim()) return;
+
+    try {
+      await createComment(token, props.post._id, comment);
+
+      // Re-fetch comments to get updated ones WITH username
+      const result = await getComments(token, props.post._id);
+      setComments(result.comments);
+
+      setComment("");
+    } catch (err) {
+      console.error("Error posting comment:", err);
+    }
+    
   const toggleAnswerVisibility = () => {
     setShowAnswer((prev) => !prev);
   };
@@ -47,6 +90,22 @@ const Post = (props) => {
         <button className={`like-button ${isLiked ? "unlike" : ""}`} onClick={toggleLike}>
           {isLiked ? "Unlike" : "Like"}
         </button>
+        <div>
+          <h4>Comments</h4>
+          <div>
+            {comments.map((comment, index) => (
+              <Comment key={index} comment={comment} />
+            ))}
+          </div>
+
+          <input
+            type="text"
+            value={comment}
+            onChange={(event) => setComment(event.target.value)}
+            placeholder="Write a comment..."
+          />
+          <button onClick={submitComment}>Post Comment</button>
+        </div>
       </div>
     </article>
   );
