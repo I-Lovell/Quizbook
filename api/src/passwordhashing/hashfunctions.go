@@ -19,7 +19,12 @@ func HashPasswords(password string) string {
 //This compares the password the user supplies at login to it's hash
 //"CompareHashAndPassword" returns nil if the hash and password match
 //Therefore this function returns true if this is the case and false otherwise
-func VerifyPassword(password, hash string) bool  {
-	passwordverified := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) 
+func VerifyPassword(hash, password string) bool  {
+	convertPassword := []byte(password)
+	convertHash := []byte(hash)
+	passwordverified := bcrypt.CompareHashAndPassword(convertHash, convertPassword) 
+	if passwordverified != nil {
+		fmt.Println(passwordverified.Error())
+	}
 	return passwordverified == nil
 }

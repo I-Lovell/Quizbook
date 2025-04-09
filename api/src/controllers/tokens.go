@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/makersacademy/go-react-acebook-template/api/src/passwordhashing"
 )
 
 type CreateTokenRequestBody struct {
@@ -26,7 +27,9 @@ func CreateToken(ctx *gin.Context) {
 		SendInternalError(ctx, err)
 	}
 
-	if user.Password != input.Password {
+	passwordVerified := passwordhashing.VerifyPassword(user.Password, input.Password)
+
+	if !passwordVerified {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Password incorrect"})
 		return
 	}
