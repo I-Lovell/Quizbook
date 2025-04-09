@@ -42,7 +42,7 @@
 }
 
 .like-button {
-  background-color: #28a745;
+  background-color: #1e7e34;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -53,7 +53,15 @@
 }
 
 .like-button:hover {
-  background-color: #218838;
+  background-color: #1e7e34;
+}
+
+.like-button.unlike {
+  background-color: #dc3545; /* Red for unlike */
+}
+
+.like-button.unlike:hover {
+  background-color: #c82333;
 }
 
 .like-button:active {
