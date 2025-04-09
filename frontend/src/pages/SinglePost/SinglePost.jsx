@@ -11,7 +11,6 @@ export const SinglePost = () => {
     let [post, setPost] = useState(null);
     const navigate = useNavigate();
     let { post_id } = useParams();
-    // console.log(post_id);
     
     useEffect(() => {
         const token = localStorage.getItem("token");
