@@ -7,6 +7,7 @@ import Post from "../../components/Post/Post";
 import "./SinglePost.css";
 import "../Background.css";
 
+
 export const SinglePost = () => {
     let [post, setPost] = useState(null);
     const navigate = useNavigate();
@@ -31,6 +32,7 @@ export const SinglePost = () => {
           });
       }, [navigate, post_id]);
     
+
       const logOutHandler = () => {
         localStorage.removeItem("token");
         navigate("/");

@@ -1,25 +1,70 @@
-import { useState } from "react";
-import { createLike } from "../../services/likes"; // Import the like service
+import { useState, useEffect } from "react";
+import { createLike } from "../../services/likes";
+import { createComment, getComments } from "../../services/comments";
+import Comment from "./Comments";
 import "./Post.css";
+import "./Comments.css";
 
 const Post = (props) => {
   const [showAnswer, setShowAnswer] = useState(false);
-  const [likes, setLikes] = useState(props.post.numOfLikes); // Local state for likes
+  const [likes, setLikes] = useState(props.post.numOfLikes);
+  const [isLiked, setIsLiked] = useState(props.post.liked);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState(props.post.comments || []);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const result = await getComments(token, props.post._id);
+        setComments(result.comments);
+      } catch (err) {
+        console.error("Error fetching comments:", err);
+      }
+    };
+
+    fetchComments();
+  }, [props.post._id]);
+
+  const toggleLike = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return alert("You must be logged in to like/unlike a post.");
+
+    try {
+      const response = await createLike(token, props.post._id);
+      if (response.message === "Like created") {
+        setLikes((prevLikes) => prevLikes + 1);
+        setIsLiked(true);
+      } else if (response.message === "Like removed") {
+        setLikes((prevLikes) => prevLikes - 1);
+        setIsLiked(false);
+      } else {
+        console.error("Unexpected response from backend:", response.message);
+      }
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    }
+  };
+
+  const submitComment = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return alert("You must be logged in to comment.");
+    if (!comment.trim()) return;
+
+    try {
+      await createComment(token, props.post._id, comment);
+      const result = await getComments(token, props.post._id);
+      setComments(result.comments);
+      setComment("");
+    } catch (err) {
+      console.error("Error posting comment:", err);
+    }
+  };
 
   const toggleAnswerVisibility = () => {
     setShowAnswer((prev) => !prev);
-  };
-
-  const likePost = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return alert("You must be logged in to like a post.");
-
-    try {
-      await createLike(token, props.post._id); // Call the backend to register the like
-      setLikes((prevLikes) => prevLikes + 1); // Update the frontend dynamically
-    } catch (err) {
-      console.error("Error liking post:", err);
-    }
   };
 
   return (
@@ -42,9 +87,27 @@ const Post = (props) => {
           </button>
         )}
         <p className="like-count">Likes: {likes}</p>
-        <button className="like-button" onClick={likePost}>
-          Like
+        <button
+          className={`like-button ${isLiked ? "unlike" : ""}`}
+          onClick={toggleLike}
+        >
+          {isLiked ? "Unlike" : "Like"}
         </button>
+        <div>
+          <h4>Comments</h4>
+          <div>
+            {comments.map((comment, index) => (
+              <Comment key={index} comment={comment} />
+            ))}
+          </div>
+          <input
+            type="text"
+            value={comment}
+            onChange={(event) => setComment(event.target.value)}
+            placeholder="Write a comment..."
+          />
+          <button onClick={submitComment}>Post Comment</button>
+        </div>
       </div>
     </article>
   );

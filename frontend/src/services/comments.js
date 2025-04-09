@@ -8,15 +8,19 @@ export const getComments = async (token, post_id) => {
     },
   };
 
-  const response = await fetch(`${BACKEND_URL}/comments/post/${post_id}`, requestOptions);
+  const response = await fetch(
+    `${BACKEND_URL}/comments/post/${post_id}`,
+    requestOptions
+  );
 
   if (response.status !== 200) {
     throw new Error("Unable to fetch comments");
   }
 
   const data = await response.json();
+
   return data;
-}
+};
 
 export const createComment = async (token, post_id, content) => {
   const payload = {
@@ -36,8 +40,9 @@ export const createComment = async (token, post_id, content) => {
   const response = await fetch(`${BACKEND_URL}/comments`, requestOptions);
 
   if (response.status !== 201) {
+    console.error("Error creating comment:", response.status, responseBody);
     throw new Error("Unable to create comment");
   }
 
   return response.json();
-}
+};

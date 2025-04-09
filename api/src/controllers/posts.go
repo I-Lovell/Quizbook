@@ -25,6 +25,7 @@ type JSONPost struct {
 	Username   string            `json:"username"`
 	Comments   []PostCommentJSON `json:"comments"`
 	NumOfLikes int               `json:"numOfLikes"`
+	Liked      bool              `json:"liked"`
 	CreatedAt  string            `json:"created_at"`
 }
 
@@ -39,7 +40,12 @@ func GetAllPosts(ctx *gin.Context) {
 	// ========== Get the user ID from the context (set by AuthenticationMiddleware) ============
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
-	token, _ := auth.GenerateToken(userID)
+	userIDUint, err := strconv.ParseUint(userID, 10, 32)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+	token, _ := auth.GenerateToken(userID) // Generate new token for the response
 
 	// ============================= Convert posts to JSON Structs ==============================
 	jsonPosts := make([]JSONPost, 0)
@@ -86,6 +92,13 @@ func GetAllPosts(ctx *gin.Context) {
 		}
 		numOfLikes := len(*likes)
 
+		// ============================= Check if current user has liked this post ==================
+		liked := false
+		existingLike, err := models.FindLikeByUserIDAndPostID(uint(userIDUint), post.ID)
+		if err == nil && existingLike != nil {
+			liked = true
+		}
+
 		// ============================= Append to JSON posts for response ==========================
 		jsonPosts = append(jsonPosts, JSONPost{
 			ID:         post.ID,
@@ -95,6 +108,7 @@ func GetAllPosts(ctx *gin.Context) {
 			Username:   authorUsername,
 			Comments:   jsonComments,
 			NumOfLikes: numOfLikes,
+			Liked:      liked,
 			CreatedAt:  post.CreatedAt.Format(time.RFC3339),
 		})
 	}
@@ -177,7 +191,12 @@ func GetPostsByUserID(ctx *gin.Context) {
 	// ========== Get the user ID from the context (set by AuthenticationMiddleware) ============
 	val, _ := ctx.Get("userID")
 	tokenUserID := val.(string)
-	token, _ := auth.GenerateToken(tokenUserID)
+	currentUserIDUint, err := strconv.ParseUint(tokenUserID, 10, 32)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+	token, _ := auth.GenerateToken(tokenUserID) // Generate new token for the response
 
 	// ============================= Convert posts to JSON Structs ==============================
 	jsonPosts := make([]JSONPost, 0)
@@ -188,14 +207,14 @@ func GetPostsByUserID(ctx *gin.Context) {
 		if err == nil {
 			authorUsername = author.Username
 		}
-		
+
+		// Grab comments for the post
 		comments, err := models.FetchCommentsByPostID(post.ID)
 		if err != nil {
 			SendInternalError(ctx, err)
 			return
 		}
-
-		// Grab comments for the post
+		// Convert comments to JSON structs
 		jsonComments := make([]PostCommentJSON, 0)
 		for _, comment := range *comments {
 			username := "Unknown" // Default if user not found
@@ -219,7 +238,14 @@ func GetPostsByUserID(ctx *gin.Context) {
 		}
 		numOfLikes := len(*likes)
 
-		// ========================= Append to JSON posts for response ============================
+		// ============================= Check if current user has liked this post ==================
+		liked := false
+		existingLike, err := models.FindLikeByUserIDAndPostID(uint(currentUserIDUint), post.ID)
+		if err == nil && existingLike != nil {
+			liked = true
+		}
+
+		// ========================= Append to JSON posts for response ==============================
 		jsonPosts = append(jsonPosts, JSONPost{
 			ID:         post.ID,
 			Question:   post.Question,
@@ -228,6 +254,7 @@ func GetPostsByUserID(ctx *gin.Context) {
 			Username:   authorUsername,
 			Comments:   jsonComments,
 			NumOfLikes: numOfLikes,
+			Liked:      liked,
 			CreatedAt:  post.CreatedAt.Format(time.RFC3339),
 		})
 	}
@@ -245,6 +272,7 @@ func GetCurrentUserPosts(ctx *gin.Context) {
 		SendInternalError(ctx, err)
 		return
 	}
+	token, _ := auth.GenerateToken(userID) // Generate new token for the response
 
 	// ============================= Fetch posts by the user ID =================================
 	posts, err := models.FetchPostsByUserID(uint(parsed))
@@ -252,9 +280,6 @@ func GetCurrentUserPosts(ctx *gin.Context) {
 		SendInternalError(ctx, err)
 		return
 	}
-
-	// ============================= Generate token ============================================
-	token, _ := auth.GenerateToken(userID)
 
 	// ============================= Convert posts to JSON Structs ==============================
 	jsonPosts := make([]JSONPost, 0)
@@ -299,6 +324,13 @@ func GetCurrentUserPosts(ctx *gin.Context) {
 		}
 		numOfLikes := len(*likes)
 
+		// ============================= Check if current user has liked this post ================
+		liked := false
+		existingLike, err := models.FindLikeByUserIDAndPostID(uint(parsed), post.ID)
+		if err == nil && existingLike != nil {
+			liked = true
+		}
+
 		// ============================= Append to JSON posts for response ==========================
 		jsonPosts = append(jsonPosts, JSONPost{
 			ID:         post.ID,
@@ -308,6 +340,7 @@ func GetCurrentUserPosts(ctx *gin.Context) {
 			Username:   authorUsername,
 			Comments:   jsonComments,
 			NumOfLikes: numOfLikes,
+			Liked:      liked,
 			CreatedAt:  post.CreatedAt.Format(time.RFC3339),
 		})
 	}
@@ -339,7 +372,12 @@ func GetPostByID(ctx *gin.Context) {
 	// ========== Get the user ID from the context (set by AuthenticationMiddleware) ============
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
-	token, _ := auth.GenerateToken(userID)
+	userIDUint, err := strconv.ParseUint(userID, 10, 32)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+	token, _ := auth.GenerateToken(userID) // Generate new token for the response
 
 	// ============================= Convert post to JSON Struct ===============================
 	// Grab the post author's username
@@ -382,6 +420,13 @@ func GetPostByID(ctx *gin.Context) {
 	}
 	numOfLikes := len(*likes)
 
+	// ============================= Check if current user has liked this post ================
+	liked := false
+	existingLike, err := models.FindLikeByUserIDAndPostID(uint(userIDUint), post.ID)
+	if err == nil && existingLike != nil {
+		liked = true
+	}
+
 	jsonPost := JSONPost{
 		ID:         post.ID,
 		Question:   post.Question,
@@ -390,8 +435,126 @@ func GetPostByID(ctx *gin.Context) {
 		Username:   authorUsername,
 		Comments:   jsonComments,
 		NumOfLikes: numOfLikes,
+		Liked:      liked,
 		CreatedAt:  post.CreatedAt.Format(time.RFC3339),
 	}
-
+	// ========================= Send response (including token) ==============================
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost, "token": token})
+}
+
+func UpdatePost(ctx *gin.Context) {
+	// ======================= Get the post ID from the URL params ==============================
+	postIDParam := ctx.Param("id")
+	postID, err := strconv.ParseUint(postIDParam, 10, 32)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid post ID"})
+		return
+	}
+
+	// ========== Get the user ID from the context (set by AuthenticationMiddleware) ============
+	val, _ := ctx.Get("userID")
+	userID, ok := val.(string)
+	if !ok {
+		SendInternalError(ctx, errors.New("userID is not a string"))
+		return
+	}
+
+	// ================== Convert userID string to uint for the database ========================
+	userIDUint, err := strconv.ParseUint(userID, 10, 32)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ============================= Get the post from the database =======================================
+	post, err := models.FetchPostByID(uint(postID))
+	if err != nil {
+		if err.Error() == "record not found" {
+			ctx.JSON(http.StatusNotFound, gin.H{"message": "Post not found"})
+			return
+		}
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ============================= Check if user is the owner of the post ===========================
+	if post.UserID != uint(userIDUint) {
+		ctx.JSON(http.StatusForbidden, gin.H{"message": "You can only update your own posts"})
+		return
+	}
+
+	// =================== Get the request body (of the things to update) =========================
+	var updates map[string]interface{}
+	if err := ctx.BindJSON(&updates); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	// ============================= Update the post in the database ==============================
+	_, err = models.UpdatePost(uint(postID), updates)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ===================== Send a success message to the frontend (with token) ==================
+	token, _ := auth.GenerateToken(userID)
+	ctx.JSON(http.StatusOK, gin.H{"message": "Post updated successfully", "token": token})
+}
+
+func DeletePostByID(ctx *gin.Context) {
+
+	// ======================= Get the post ID from the URL ==============================
+	postIDParam := ctx.Param("id")
+	postID, err := strconv.ParseUint(postIDParam, 10, 32)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid post ID"})
+		return
+	}
+	// ==================== Get the user ID ====================
+	userIDstr, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+		return
+	}
+
+	// Convert userID to string
+	userIDstring, ok := userIDstr.(string)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid user ID format"})
+		return
+	}
+
+	// Convert userID to uint
+	userID, err := strconv.ParseUint(userIDstring, 10, 32)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ======================= Fetch the post by ID ============================================
+	post, err := models.FetchPostByID(uint(postID))
+	if err != nil {
+		if err.Error() == "record not found" {
+			ctx.JSON(http.StatusNotFound, gin.H{"message": "Post not found"})
+			return
+		}
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ==================== Check if the user is the owner of the post =========================
+	if post.UserID != uint(userID) {
+		ctx.JSON(http.StatusForbidden, gin.H{"message": "You are not authorised to delete this post"})
+		return
+	}
+
+	// ======================= Delete the post ================================================
+	err = models.DeletePost(uint(postID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete post"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Post deleted successfully"})
 }

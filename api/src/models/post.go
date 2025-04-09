@@ -55,3 +55,40 @@ func FetchPostByID(id uint) (*Post, error) {
 
 	return &post, nil
 }
+
+func UpdatePost(id uint, updates map[string]interface{}) (*Post, error) {
+	var post Post
+
+	// First find the post
+	if err := Database.First(&post, id).Error; err != nil {
+		return nil, err
+	}
+
+	// Attempt to update the post in the database
+	if err := Database.Model(&post).Updates(updates).Error; err != nil {
+		return nil, err
+	}
+
+	// Refresh post data
+	if err := Database.First(&post, id).Error; err != nil {
+		return nil, err
+	}
+
+	return &post, nil
+}
+
+func DeletePost(id uint) error {
+	var post Post
+
+	// Find the post
+	if err := Database.First(&post, id).Error; err != nil {
+		return err
+	}
+
+	// Delete the post record from the database
+	if err := Database.Delete(&post).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
