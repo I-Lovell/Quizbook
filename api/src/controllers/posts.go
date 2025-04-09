@@ -438,6 +438,6 @@ func GetPostByID(ctx *gin.Context) {
 		Liked:      liked,
 		CreatedAt:  post.CreatedAt.Format(time.RFC3339),
 	}
-
+	// ========================= Send response (including token) ==============================
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost, "token": token})
 }

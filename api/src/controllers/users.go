@@ -119,6 +119,106 @@ func UpdateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "User updated successfully", "token": token})
 }
 
+// Returns the currently logged in user's information
+func GetCurrentUser(ctx *gin.Context) {
+	// Get user ID from context
+	userIDStr, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+		return
+	}
+
+	// Check if userID is nil
+	if userIDStr == nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "User ID is nil"})
+		return
+	}
+
+	// Safely convert to string
+	userIDString, ok := userIDStr.(string)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid user ID format"})
+		return
+	}
+
+	// Fetch the user from the database using the existing FindUser function
+	user, err := models.FindUser(userIDString)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// Convert profile picture path to base64 if it exists
+	var profilePictureBase64 string
+	if user.ProfilePictureURL != "" {
+		profilePictureBase64, err = convertImageToBase64(user.ProfilePictureURL)
+		if err != nil {
+			// Just log the error and continue, don't fail the whole request
+			fmt.Printf("Error converting profile image to base64: %v\n", err)
+		}
+	}
+
+	// Generate a new token for the user
+	val, _ := ctx.Get("userID")
+	tokenUserID := val.(string)
+	token, _ := auth.GenerateToken(tokenUserID)
+
+	// Create user data map
+	userData := gin.H{
+		"ID":             user.ID,
+		"username":       user.Username,
+		"email":          user.Email,
+		"firstName":      user.FirstName,
+		"surname":        user.Surname,
+		"bio":            user.Bio,
+		"profilePicture": profilePictureBase64,
+		"Posts":          user.Posts,
+	}
+
+	// Return user data and token in the requested format
+	ctx.JSON(http.StatusOK, gin.H{"user": userData, "token": token})
+}
+
+func DeleteUser(ctx *gin.Context) {
+
+	// ==================== Get the user ID from the context ====================
+	userIDstr, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+		return
+	}
+
+	// Check if userID is nil
+	if userIDstr == nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "User ID nil"})
+		return
+	}
+
+	// Convert userID to string
+	userIDstring, ok := userIDstr.(string)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid user ID format"})
+		return
+	}
+
+	// Convert userID to uint
+	userID, err := strconv.ParseUint(userIDstring, 10, 64)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// Delete the user from the database & return a success message
+	err = models.DeleteUser(uint(userID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete user"})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
+}
+
+// ======================== Helper functions for encoding/decoding images ==============================
+
 // the below helper function handles saves the base64 image (which is sent as a string
 // from the frontend) to the api/uploads directory (so that we can store a path in the DB)
 func saveProfilePicture(base64Image string, userID uint) (string, error) {
@@ -203,93 +303,4 @@ func convertImageToBase64(imagePath string) (string, error) {
 
 	// Return as data URI
 	return fmt.Sprintf("data:%s;base64,%s", contentType, base64Data), nil
-}
-
-// Returns the currently logged in user's information
-func GetCurrentUser(ctx *gin.Context) {
-	// Get user ID from context
-	userIDStr, exists := ctx.Get("userID")
-	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-		return
-	}
-
-	// Check if userID is nil
-	if userIDStr == nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "User ID is nil"})
-		return
-	}
-
-	// Safely convert to string
-	userIDString, ok := userIDStr.(string)
-	if !ok {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid user ID format"})
-		return
-	}
-
-	// Fetch the user from the database using the existing FindUser function
-	user, err := models.FindUser(userIDString)
-	if err != nil {
-		SendInternalError(ctx, err)
-		return
-	}
-
-	// Convert profile picture path to base64 if it exists
-	var profilePictureBase64 string
-	if user.ProfilePictureURL != "" {
-		profilePictureBase64, err = convertImageToBase64(user.ProfilePictureURL)
-		if err != nil {
-			// Just log the error and continue, don't fail the whole request
-			fmt.Printf("Error converting profile image to base64: %v\n", err)
-		}
-	}
-
-	// Generate a new token for the user
-	val, _ := ctx.Get("userID")
-	tokenUserID := val.(string)
-	token, _ := auth.GenerateToken(tokenUserID)
-
-	// Create user data map
-	userData := gin.H{
-		"ID":             user.ID,
-		"username":       user.Username,
-		"email":          user.Email,
-		"firstName":      user.FirstName,
-		"surname":        user.Surname,
-		"bio":            user.Bio,
-		"profilePicture": profilePictureBase64,
-		"Posts":          user.Posts,
-	}
-
-	// Return user data and token in the requested format
-	ctx.JSON(http.StatusOK, gin.H{"user": userData, "token": token})
-}
-
-func DeleteUser(ctx *gin.Context) {
-	userIDstr, exists := ctx.Get("userID")
-	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-		return
-	}
-	if userIDstr == nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "User ID nil"})
-		return
-	}
-	userIDstring, ok := userIDstr.(string)
-	if !ok {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid user ID format"})
-		return
-	}
-	userID, err := strconv.ParseUint(userIDstring, 10, 64)
-	if err != nil {
-		SendInternalError(ctx, err)
-		return
-	}
-	// Delete the user from the database
-	err = models.DeleteUser(uint(userID))
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete user"})
-		return
-	}
-	ctx.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
 }
