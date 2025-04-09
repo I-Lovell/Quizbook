@@ -16,26 +16,27 @@ type JSONLike struct {
 }
 
 func GetLikesByPostID(ctx *gin.Context) {
+	// ========== Get the post ID from the URL params ==========
 	postID := ctx.Param("post_id")
 	postIDUint, err := strconv.ParseUint(postID, 10, 32)
-	
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid post ID"})
 		return
 	}
 
+	// ========== Fetch the likes for the post ==========
 	likes, err := models.FetchLikesByPostID(uint(postIDUint))
-
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
 	}
 
+	// ========== Get the user ID from the context ==========
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
 	token, _ := auth.GenerateToken(userID)
 
-	// Convert likes to JSON Structs
+	// ========== Convert the likes to JSON Structs ==========
 	jsonLikes := make([]JSONLike, 0)
 	for _, like := range *likes {
 		jsonLikes = append(jsonLikes, JSONLike{
@@ -45,6 +46,7 @@ func GetLikesByPostID(ctx *gin.Context) {
 		})
 	}
 
+	// ========== Send the response (w/ token)==========
 	ctx.JSON(http.StatusOK, gin.H{"likes": jsonLikes, "token": token})
 }
 
@@ -67,7 +69,7 @@ func CreateLike(ctx *gin.Context) {
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
 	userIDUint, err := strconv.ParseUint(userID, 10, 32)
-	
+
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
@@ -90,24 +92,24 @@ func CreateLike(ctx *gin.Context) {
 		// ========== Send success message ==========
 		ctx.JSON(http.StatusOK, gin.H{"message": "Like removed", "token": token})
 		return
-		} else if err != nil && err.Error() != "record not found" {
-			SendInternalError(ctx, err) // this should never happen
-			return
-		}
-		
-		// Case 2: Like doesn't exist, so create it
-		newLike := models.Like{
-			PostID: requestBody.PostID,
-			UserID: uint(userIDUint),
-		}
-		
-		// and then save the new like to the DB
-		_, err = newLike.Save()
-		if err != nil {
-			SendInternalError(ctx, err)
-			return
-		}
-		
-		// ========== Send success message ==========
+	} else if err != nil && err.Error() != "record not found" {
+		SendInternalError(ctx, err) // this should never happen
+		return
+	}
+
+	// Case 2: Like doesn't exist, so create it
+	newLike := models.Like{
+		PostID: requestBody.PostID,
+		UserID: uint(userIDUint),
+	}
+
+	// and then save the new like to the DB
+	_, err = newLike.Save()
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ========== Send success message ==========
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Like created", "token": token})
-} 
+}

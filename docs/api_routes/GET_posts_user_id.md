@@ -33,7 +33,22 @@ Returns a JSON object containing an array of posts and a new JWT token.
       "_id": 1,
       "question": "This is a test question",
       "answer": "test answer from bobio",
-      "user_id": 1
+      "user_id": 1,
+      "username": "bobsmith",
+      "comments": [
+        {
+          "userID": 2,
+          "username": "luke",
+          "contents": "this is a comment"
+        },
+        {
+          "userID": 3,
+          "username": "abbie",
+          "contents": "this is another comment"
+        }
+      ],
+      "numOfLikes": 3,
+      "liked": false
     }
   ],
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -70,4 +85,11 @@ Returns a JSON object containing an array of posts and a new JWT token.
   - `question`: The question text
   - `answer`: The answer text
   - `user_id`: The ID of the user who created the post
+  - `username`: The username of the user who created the post
+  - `comments`: An array of comments on the post, each with:
+    - `userID`: The ID of the user who made the comment
+    - `username`: The username of the user who made the comment
+    - `contents`: The content of the comment
+  - `numOfLikes`: The number of likes the post has received
+  - `liked`: Boolean indicating whether the current authenticated user has liked this post
 - A new JWT token is returned with each successful response for token refresh purposes 

@@ -9,7 +9,8 @@ import "./Comments.css";
 
 const Post = (props) => {
   const [showAnswer, setShowAnswer] = useState(false);
-  const [likes, setLikes] = useState(props.post.numOfLikes); // Local state for likes
+  const [likes, setLikes] = useState(props.post.numOfLikes); // Initialize likes from props
+  const [isLiked, setIsLiked] = useState(props.post.liked); // Initialize isLiked from the new backend field
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(props.post.comments || []);
 
@@ -29,21 +30,27 @@ const Post = (props) => {
     fetchComments();
   }, [props.post._id]);
 
-  const toggleAnswerVisibility = () => {
-    setShowAnswer((prev) => !prev);
-  };
 
-  const likePost = async () => {
+  const toggleLike = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return alert("You must be logged in to like a post.");
+    if (!token) return alert("You must be logged in to like/unlike a post.");
 
     try {
-      await createLike(token, props.post._id); // Call the backend to register the like
-      setLikes((prevLikes) => prevLikes + 1); // Update the frontend dynamically
+      const response = await createLike(token, props.post._id); // Call the backend to toggle the like
+      if (response.message === "Like created") {
+        setLikes((prevLikes) => prevLikes + 1); // Increment likes
+        setIsLiked(true); // Mark as liked
+      } else if (response.message === "Like removed") {
+        setLikes((prevLikes) => prevLikes - 1); // Decrement likes
+        setIsLiked(false); // Mark as unliked
+      } else {
+        console.error("Unexpected response from backend:", response.message);
+      }
     } catch (err) {
-      console.error("Error liking post:", err);
+      console.error("Error toggling like:", err);
     }
   };
+
 
   const submitComment = async () => {
     const token = localStorage.getItem("token");
@@ -62,30 +69,26 @@ const Post = (props) => {
     } catch (err) {
       console.error("Error posting comment:", err);
     }
+    
+  const toggleAnswerVisibility = () => {
+    setShowAnswer((prev) => !prev);
   };
 
   return (
     <article className="post-box">
       <div className="post-user-id">Created by: {props.post.username}</div>
       <div className="post-content">
-        <p className="post-question">
-          <strong>Question:</strong> {props.post.question}
-        </p>
+        <p className="post-question"><strong>Question:</strong> {props.post.question}</p>
         {showAnswer ? (
-          <p className="post-answer">
-            <strong>Answer:</strong> {props.post.answer}
-          </p>
+          <p className="post-answer"><strong>Answer:</strong> {props.post.answer}</p>
         ) : (
-          <button
-            className="reveal-answer-button"
-            onClick={toggleAnswerVisibility}
-          >
+          <button className="reveal-answer-button" onClick={toggleAnswerVisibility}>
             Show Answer
           </button>
         )}
         <p className="like-count">Likes: {likes}</p>
-        <button className="like-button" onClick={likePost}>
-          Like
+        <button className={`like-button ${isLiked ? "unlike" : ""}`} onClick={toggleLike}>
+          {isLiked ? "Unlike" : "Like"}
         </button>
         <div>
           <h4>Comments</h4>

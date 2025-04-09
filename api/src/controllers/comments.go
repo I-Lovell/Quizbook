@@ -18,6 +18,7 @@ type JSONComment struct {
 }
 
 func GetCommentsByPostID(ctx *gin.Context) {
+	// ========== Get the post ID from the URL params ==========
 	postID := ctx.Param("post_id")
 	postIDUint, err := strconv.ParseUint(postID, 10, 32)
 
@@ -26,18 +27,19 @@ func GetCommentsByPostID(ctx *gin.Context) {
 		return
 	}
 
+	// ========== Fetch the comments for the post ==========
 	comments, err := models.FetchCommentsByPostID(uint(postIDUint))
-
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
 	}
 
+	// ========== Get the user ID from the context ==========
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
 	token, _ := auth.GenerateToken(userID)
 
-	// Convert comments to JSON Structs
+	// ========== Convert comments to JSON Structs ==========
 	jsonComments := make([]JSONComment, 0)
 	for _, comment := range *comments {
 		// Find the user who made the comment to get their username
@@ -56,6 +58,7 @@ func GetCommentsByPostID(ctx *gin.Context) {
 		})
 	}
 
+	// ========== Send the response (w/ token) ==========
 	ctx.JSON(http.StatusOK, gin.H{"comments": jsonComments, "token": token})
 }
 
@@ -65,19 +68,21 @@ type createCommentRequestBody struct {
 }
 
 func CreateComment(ctx *gin.Context) {
+	// ========== Get the request body ==========
 	var requestBody createCommentRequestBody
 	err := ctx.BindJSON(&requestBody)
-
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
 
+	// ========== Check if the comment content is empty ==========
 	if len(requestBody.Content) == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Comment content empty"})
 		return
 	}
 
+	// ========== Get the user ID from the context ==========
 	val, _ := ctx.Get("userID")
 	userID := val.(string)
 	userIDUint, err := strconv.ParseUint(userID, 10, 32)
@@ -87,19 +92,21 @@ func CreateComment(ctx *gin.Context) {
 		return
 	}
 
+	// ========== Create a new comment ==========
 	newComment := models.Comment{
 		Content: requestBody.Content,
 		PostID:  requestBody.PostID,
 		UserID:  uint(userIDUint),
 	}
 
+	// ========= Save new comment to DB =========
 	_, err = newComment.Save()
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
 	}
 
+	// ========== Send the response (w/ token) ==========
 	token, _ := auth.GenerateToken(userID)
-
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Comment created", "token": token})
 }
