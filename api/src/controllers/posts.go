@@ -442,6 +442,66 @@ func GetPostByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"post": jsonPost, "token": token})
 }
 
+func UpdatePost(ctx *gin.Context) {
+	// ======================= Get the post ID from the URL params ==============================
+	postIDParam := ctx.Param("id")
+	postID, err := strconv.ParseUint(postIDParam, 10, 32)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid post ID"})
+		return
+	}
+
+	// ========== Get the user ID from the context (set by AuthenticationMiddleware) ============
+	val, _ := ctx.Get("userID")
+	userID, ok := val.(string)
+	if !ok {
+		SendInternalError(ctx, errors.New("userID is not a string"))
+		return
+	}
+
+	// ================== Convert userID string to uint for the database ========================
+	userIDUint, err := strconv.ParseUint(userID, 10, 32)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ============================= Get the post from the database =======================================
+	post, err := models.FetchPostByID(uint(postID))
+	if err != nil {
+		if err.Error() == "record not found" {
+			ctx.JSON(http.StatusNotFound, gin.H{"message": "Post not found"})
+			return
+		}
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ============================= Check if user is the owner of the post ===========================
+	if post.UserID != uint(userIDUint) {
+		ctx.JSON(http.StatusForbidden, gin.H{"message": "You can only update your own posts"})
+		return
+	}
+
+	// =================== Get the request body (of the things to update) =========================
+	var updates map[string]interface{}
+	if err := ctx.BindJSON(&updates); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	// ============================= Update the post in the database ==============================
+	_, err = models.UpdatePost(uint(postID), updates)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ===================== Send a success message to the frontend (with token) ==================
+	token, _ := auth.GenerateToken(userID)
+	ctx.JSON(http.StatusOK, gin.H{"message": "Post updated successfully", "token": token})
+}
+
 func DeletePostByID(ctx *gin.Context) {
 
 	// ======================= Get the post ID from the URL ==============================
