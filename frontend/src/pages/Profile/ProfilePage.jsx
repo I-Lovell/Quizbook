@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import { fetchSelfPosts } from "../../services/posts";
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
-import "./ProfilePage.css";
-import "../Background.css";
 import ProfileForm from "../../components/Post/ProfileForm";
 import ProfileDetails from "../../components/Post/ProfileDetails";
-import { useCurrentUser } from "../../contexts/CurrentUserContext";
-import { useNavigate } from "react-router-dom";
-import { fetchSelfPosts } from "../../services/posts";
 import Post from "../../components/Post/Post";
+import "../Background.css";
+import "./ProfilePage.css";
 import "../Feed/FeedPage.css";
 
 export const ProfilePage = () => {

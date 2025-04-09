@@ -22,15 +22,10 @@ export const LoggedInHeader = ({ onLogout }) => {
         <h1 className="title">QuizBook</h1>
       </div>
       <nav className="nav">
-        <Link to="/posts" className="nav-button">
-          Home
-        </Link>
-        <Link to="/profile" className="nav-button">
-          Profile
-        </Link>
-        <button onClick={onLogout} className="nav-button">
-          Logout
-        </button>
+        <Link to="/posts" className="nav-button">Home</Link>
+        <Link to="/profile/me" className="nav-button">Profile</Link>
+        <button onClick={onLogout} className="nav-button">Logout</button>
+
       </nav>
     </header>
   );

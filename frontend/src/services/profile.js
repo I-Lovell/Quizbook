@@ -19,6 +19,24 @@ export const getSelf = async (token) => {
   return data;
 };
 
+export const getProfileByUserID = async (user_id, token) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/users/${user_id}`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch profile with ID:", user_id);
+  }
+
+  const data = await response.json();
+  return data;
+};
+
 export const updateProfile = async (updates, token) => {
   const requestOptions = {
     method: "PUT",
