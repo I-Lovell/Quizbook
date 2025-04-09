@@ -10,7 +10,7 @@ import "./ProfilePage.css";
 import "../Background.css";
 import "../Feed/FeedPage.css";
 
-export const OtherUserProfilePage = () => {
+export const OtherUsersProfilePage = () => {
   const [userPosts, setUserPosts] = useState([]);
   const navigate = useNavigate();
   const { token, logout } = useCurrentUser();
@@ -63,6 +63,6 @@ export const OtherUserProfilePage = () => {
   );
 };
 
-export default OtherUserProfilePage;
+export default OtherUsersProfilePage;
 
 // IF USER_ID  === CURRENT_USER_ID, REDIRECT TO "/PROFILE/ME"
