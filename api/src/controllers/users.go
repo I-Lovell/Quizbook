@@ -293,3 +293,30 @@ func DeleteUser(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
 }
+
+func GetUserByID(ctx *gin.Context)  {
+	userID := ctx.Param("id")
+	profile, err := models.FindUser(userID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message":"User ID not found"})
+	}
+	var friendProfilePictureBase64 string
+	// Convert profile picture path to base64 if it exists
+	if profile.ProfilePictureURL != "" {
+		friendProfilePictureBase64, err = convertImageToBase64(profile.ProfilePictureURL)
+		if err != nil {
+			// Just log the error and continue, don't fail the whole request
+			fmt.Printf("Error converting profile image to base64: %v\n", err)
+		}
+	}
+
+	profileData := gin.H{
+		"ID":             profile.ID,
+		"username":       profile.Username,
+		"bio":            profile.Bio,
+		"profilePicture": friendProfilePictureBase64,
+		"Posts":          profile.Posts,
+	}
+	
+	ctx.JSON(http.StatusOK, gin.H{"profile": profileData})
+}
