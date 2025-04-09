@@ -41,7 +41,8 @@ Returns a JSON object containing an array of all posts and a new JWT token.
           "contents": "this is another comment"
         }
       ],
-      "numOfLikes": 3
+      "numOfLikes": 3,
+      "liked": true
     },
     {
       "_id": 2,
@@ -61,7 +62,8 @@ Returns a JSON object containing an array of all posts and a new JWT token.
           "contents": "this is another comment"
         }
       ],
-      "numOfLikes": 4
+      "numOfLikes": 4,
+      "liked": false
     }
   ],
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -97,5 +99,6 @@ Returns a JSON object containing an array of all posts and a new JWT token.
     - `username`: The username of the user who made the comment
     - `contents`: The content of the comment
   - `numOfLikes`: The number of likes the post has received
+  - `liked`: Boolean indicating whether the current authenticated user has liked this post
 - A new JWT token is returned with each successful response for token refresh purposes, which can be used on future requests
 - The endpoint includes all posts in the system, regardless of which user created them 

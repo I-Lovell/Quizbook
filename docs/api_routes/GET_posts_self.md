@@ -45,7 +45,8 @@ Returns a JSON object containing an array of the authenticated user's posts and 
           "contents": "this is another comment"
         }
       ],
-      "numOfLikes": 3
+      "numOfLikes": 3,
+      "liked": true
     },
     {
       "_id": 2,
@@ -60,7 +61,8 @@ Returns a JSON object containing an array of the authenticated user's posts and 
           "contents": "this is a comment"
         }
       ],
-      "numOfLikes": 2
+      "numOfLikes": 2,
+      "liked": false
     }
   ],
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -98,4 +100,5 @@ Returns a JSON object containing an array of the authenticated user's posts and 
     - `username`: The username of the user who made the comment
     - `contents`: The content of the comment
   - `numOfLikes`: The number of likes the post has received
+  - `liked`: Boolean indicating whether the current authenticated user has liked this post
 - A new JWT token is returned with each successful response for token refresh purposes 
