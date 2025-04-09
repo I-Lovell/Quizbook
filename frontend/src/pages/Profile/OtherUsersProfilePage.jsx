@@ -76,20 +76,23 @@ export const OtherUsersProfilePage = () => {
       <LoggedInHeader onLogout={logOutHandler} />
       <div className="profile-content">
         <div className="profile-left">
-        <div className="profile-picture-container">
-          <div className="profilePicture">
-            <div className="profile-picture-wrapper">
-              <img
-                src={
-                  userProfileData?.profilePicture ||
-                  "https://img.freepik.com/free-psd/cartoon-question-mark-isolated_23-2151568563.jpg?semt=ais_hybrid"
-                }
-                alt="Profile"
-                className="profile-picture"
-              />
+          <div className="profile-picture-container">
+            <div className="profilePicture">
+              <div className="profile-picture-wrapper">
+                <img
+                  src={
+                    userProfileData?.profilePicture ||
+                    "https://img.freepik.com/free-psd/cartoon-question-mark-isolated_23-2151568563.jpg?semt=ais_hybrid"
+                  }
+                  alt="Profile"
+                  className="profile-picture"
+                />
+              </div>
             </div>
           </div>
-        </div>
+          <h2 className="username">
+            {userProfileData?.username || "No username"}
+          </h2>
         <p className="bio">
         {userProfileData?.bio || "This user has no bio."}
         </p>        
