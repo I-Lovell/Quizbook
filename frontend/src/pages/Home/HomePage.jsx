@@ -2,7 +2,7 @@ import "./HomePage.css";
 import "../Background.css";
 import "../../Components/Post/TypeAnimation.css";
 import Header from "../../components/Post/Header";
-import CustomTypeAnimation from "../../components/Post/CustomeTypeAnimation";
+import CustomTypeAnimation from "../../components/Post/CustomTypeAnimation";
 
 export const HomePage = () => {
   return (
