@@ -13,5 +13,7 @@ func setupPostRoutes(baseRouter *gin.RouterGroup) {
 	posts.GET("", middleware.AuthenticationMiddleware, controllers.GetAllPosts)
 	posts.GET("/:id", middleware.AuthenticationMiddleware, controllers.GetPostByID)
 	posts.GET("/user/:id", middleware.AuthenticationMiddleware, controllers.GetPostsByUserID) // Returns all posts by a specific user
-	posts.GET("/self", middleware.AuthenticationMiddleware, controllers.GetCurrentUserPosts) // Returns all posts by the currently logged in user
+	posts.GET("/self", middleware.AuthenticationMiddleware, controllers.GetCurrentUserPosts)  // Returns all posts by the currently logged in user
+	posts.PUT("/:id", middleware.AuthenticationMiddleware, controllers.UpdatePost)            // Updates a post by its ID
+
 }
