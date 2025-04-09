@@ -19,7 +19,7 @@ export const getSelf = async (token) => {
   return data;
 };
 
-export const getOtherUserProfile = async (user_id, token) => {
+export const getProfileByID = async (user_id, token) => {
   const requestOptions = {
     method: "GET",
     headers: {
@@ -30,7 +30,7 @@ export const getOtherUserProfile = async (user_id, token) => {
   const response = await fetch(`${BACKEND_URL}/users/${user_id}`, requestOptions);
 
   if (response.status !== 200) {
-    throw new Error("Unable to fetch profile:", user_id);
+    throw new Error("Unable to fetch profile with ID:", user_id);
   }
 
   const data = await response.json();

@@ -101,3 +101,21 @@ export const getSinglePostByID = async (token, post_id) => {
     throw error;
   }
 };
+
+export const getPostsByUserID = async (user_id, token) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/posts/user/${user_id}`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to fetch posts");
+  }
+
+  const data = await response.json();
+  return data;
+}
