@@ -294,11 +294,11 @@ func DeleteUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
 }
 
-func GetUserByID(ctx *gin.Context)  {
+func GetUserByID(ctx *gin.Context) {
 	userID := ctx.Param("id")
 	profile, err := models.FindUser(userID)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message":"User ID not found"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "User ID not found"})
 	}
 	var friendProfilePictureBase64 string
 	// Convert profile picture path to base64 if it exists
@@ -310,6 +310,10 @@ func GetUserByID(ctx *gin.Context)  {
 		}
 	}
 
+	val, _ := ctx.Get("userID")
+	userID = val.(string)
+	token, _ := auth.GenerateToken(userID)
+
 	profileData := gin.H{
 		"ID":             profile.ID,
 		"username":       profile.Username,
@@ -317,6 +321,6 @@ func GetUserByID(ctx *gin.Context)  {
 		"profilePicture": friendProfilePictureBase64,
 		"Posts":          profile.Posts,
 	}
-	
-	ctx.JSON(http.StatusOK, gin.H{"profile": profileData})
+
+	ctx.JSON(http.StatusOK, gin.H{"user": profileData, "token": token})
 }

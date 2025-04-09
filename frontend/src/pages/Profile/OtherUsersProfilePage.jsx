@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
-import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import {  useCurrentUser } from "../../contexts/CurrentUserContext";
 import { getPostsByUserID } from "../../services/posts";
-import { getProfileByUserID } from "../../services/profile";
+import { getProfileByUserID, getSelf } from "../../services/profile";
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
 import Post from "../../components/Post/Post";
 import "./ProfilePage.css";
@@ -12,6 +12,8 @@ import "../Feed/FeedPage.css";
 
 export const OtherUsersProfilePage = () => {
   const [userPosts, setUserPosts] = useState([]);
+  const [userProfileData, setProfileData] = useState([]);
+  const [currentUserID, setCurrentUserID] = useState(null);
   const navigate = useNavigate();
   const { token, logout } = useCurrentUser();
   const { user_id } = useParams();
@@ -19,11 +21,28 @@ export const OtherUsersProfilePage = () => {
   useEffect(() => {
     if (!token) return navigate("/login");
 
-    getProfileByUserID(user_id, token)
+    getSelf(token)
       .then((data) => {
-        if (!data.user) {
+        const currentUserData = data.user;
+        const currentUserID = currentUserData.ID;
+        localStorage.setItem("currentUser", JSON.stringify(currentUserData));
+        setCurrentUserID(currentUserID);
+      })
+      .catch((err) => {
+        console.error(err);
+        navigate("/login");
+      });
+
+    getProfileByUserID(user_id, token)
+      .then((rawProfileData) => {
+        if (!rawProfileData.message === "User ID not found") {
           console.error("User not found");
           navigate("/posts");
+        }
+        const profileData = rawProfileData.user;
+        setProfileData(profileData);
+        if (profileData.ID == currentUserID) {
+          navigate("/profile/me");
         }
       })
       .catch((err) => {
@@ -32,8 +51,8 @@ export const OtherUsersProfilePage = () => {
       });
 
     getPostsByUserID(user_id, token)
-      .then((data) => {
-        let sortedPosts = data.posts.sort((a, b) => {
+      .then((postsData) => {
+        let sortedPosts = postsData.posts.sort((a, b) => {
           const dateA = new Date(a.created_at);
           const dateB = new Date(b.created_at);
           return dateB - dateA;
@@ -53,13 +72,44 @@ export const OtherUsersProfilePage = () => {
 
   return (
     <div className="profile-page-layout">
-    <div className="backim"></div>
-    <div className="profile-content">
-      <div className="profile-left">
-      <h1>Hello!</h1>
+      <div className="backim"></div>
+      <LoggedInHeader onLogout={logOutHandler} />
+      <div className="profile-content">
+        <div className="profile-left">
+        <div className="profile-picture-container">
+          <div className="profilePicture">
+            <div className="profile-picture-wrapper">
+              <img
+                src={
+                  userProfileData?.profilePicture ||
+                  "https://img.freepik.com/free-psd/cartoon-question-mark-isolated_23-2151568563.jpg?semt=ais_hybrid"
+                }
+                alt="Profile"
+                className="profile-picture"
+              />
+            </div>
+          </div>
+        </div>
+        <p className="bio">
+        {userProfileData?.bio || "This user has no bio."}
+        </p>        
+
+        </div>
+        <div className="vertical-line"></div>
+        <div className="profile-right">
+          <h3>Your Posts</h3>
+          {userPosts.length === 0 ? (
+            <p>This user hasn’t posted anything yet.</p>
+          ) : (
+            <div className="feed" role="feed">
+              {userPosts.map((post) => (
+                <Post post={post} key={post._id} hideUsername={true} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 

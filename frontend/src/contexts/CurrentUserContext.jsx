@@ -47,7 +47,6 @@ export const CurrentUserProvider = ({ children }) => {
   }, [token, fetchUserData]);
 
   useEffect(() => {
-    console.log("Current User in Context:", currentUser);
   }, [currentUser]);
 
   const login = useCallback((newToken) => {
