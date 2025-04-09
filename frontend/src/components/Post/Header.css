@@ -53,3 +53,104 @@
     background-color: #f0e919;
     color: #333;
   }
+
+  .fader-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .fade-in {
+    transition: opacity 4s ease;
+    z-index: -1;
+  }
+
+  .fade-out {
+    opacity: 0;
+    transition: opacity 4s ease;
+    z-index: -1;
+  }
+
+  .fader-1 {
+    font-size: 120px;
+    position: absolute;
+    rotate: 15deg;
+    top: -50px;
+    right: 35px;;
+    color: rgb(63, 62, 62);
+  }
+
+  .fader-2 {
+    font-size: 130px;
+    rotate: 45deg;
+    position: absolute;
+    left: 515px;
+    top: -90px;
+    color: rgb(63, 62, 62);
+  }
+
+  .fader-3 {
+    font-size: 150px;
+    color: rgb(63, 62, 62);
+    rotate: -10deg;
+    top: -140px;
+    left: 250px;
+    position: absolute;
+  }
+
+  .fader-4 {
+    font-size: 120px;
+    color: rgb(63, 62, 62);
+    rotate: -40deg;
+    top: -110px;
+    right: 450px;
+    position: absolute;
+  }
+
+  .fader-5 {
+    font-size: 200px;
+    font-weight: bold;
+    color: rgb(63, 62, 62);
+    position: absolute;
+    top: -200px;
+    left: 820px;
+  }
+
+  .fader-6 {
+    font-size: 200px;
+    color: rgb(63, 62, 62);
+    position: absolute;
+    top: -190px;
+    right: 200px;
+    rotate: 25deg;
+  }
+
+  .fader-7 {
+    font-size: 100px;
+    color: rgb(63, 62, 62);
+    top: -50px;
+    position: absolute;
+  }
+
+  .fader-8 {
+    font-size: 250px;
+    font-weight: bold;
+    rotate: -20deg;
+    color: rgb(63, 62, 62);
+    position: absolute;
+    top: -250px;
+    left: 650px;
+  }
+
+  .fader-9 {
+    font-size: 180px;
+    rotate: 10deg;
+    position: absolute;
+    left: 365px;
+    top: -140px;
+    color: rgb(63, 62, 62);
+  }
