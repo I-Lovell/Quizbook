@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/makersacademy/go-react-acebook-template/api/src/passwordhashing"
 	"gorm.io/gorm"
 )
 
@@ -11,12 +12,12 @@ func UserSeeds(db *gorm.DB) {
 	//Example Users created below
 	//We create instances of the user model all within a slice to iterate over later
 	users := []models.User{
-		{Username: "quizguy", Email: "quiz@email.com", Password: "ilovequiz", FirstName: "John", Surname: "Smith", Bio: "I love me a good pub quiz"},
-		{Username: "CoolCat", Email: "cat@cat.com", Password: "mouse", FirstName: "Percival", Surname: "Green", Bio: "I am interested in cat based quizes"},
-		{Username: "NoSoftQuestions", Email: "cynic@eyebrowraise.com", Password: "socrates1992", FirstName: "Lucy", Surname: "Stone", Bio: "No one has ever answered one of my questions correctly"},
-		{Username: "CustardLover", Email: "custard@pudding.com", Password: "cake", FirstName: "Carol", Surname: "Harvester", Bio: "I only signed up because i thought this was a baking website"},
-		{Username: "QuizzicalQuentin", Email: "quentin@email.com", Password: "p@ssword!", FirstName: "Quentin", Surname: "Quentin", Bio: "I don't have to tell you anything about myself."},
-		{Username: "Test", Email: "test@gmail.com", Password: "123", FirstName: "Tilly", Surname: "Test", Bio: "This is the test profile"},
+		{Username: "quizguy", Email: "quiz@email.com", Password: passwordhashing.HashPasswords("ilovequiz"), FirstName: "John", Surname: "Smith", Bio: "I love me a good pub quiz"},
+		{Username: "CoolCat", Email: "cat@cat.com", Password: passwordhashing.HashPasswords("mouse"), FirstName: "Percival", Surname: "Green", Bio: "I am interested in cat based quizes"},
+		{Username: "NoSoftQuestions", Email: "cynic@eyebrowraise.com", Password: passwordhashing.HashPasswords("socrates1992"), FirstName: "Lucy", Surname: "Stone", Bio: "No one has ever answered one of my questions correctly"},
+		{Username: "CustardLover", Email: "custard@pudding.com", Password: passwordhashing.HashPasswords("cake"), FirstName: "Carol", Surname: "Harvester", Bio: "I only signed up because i thought this was a baking website"},
+		{Username: "QuizzicalQuentin", Email: "quentin@email.com", Password: passwordhashing.HashPasswords("p@ssword!"), FirstName: "Quentin", Surname: "Quentin", Bio: "I don't have to tell you anything about myself."},
+		{Username: "Test", Email: "test@gmail.com", Password: passwordhashing.HashPasswords("123"), FirstName: "Tilly", Surname: "Test", Bio: "This is the test profile"},
 	}
 
 	//Here we iterate over the slice of users, save each to a database and print
