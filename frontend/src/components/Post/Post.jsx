@@ -4,6 +4,8 @@ import "./Post.css";
 import { createComment } from "../../services/comments"; // Import the comment service
 import { getComments } from "../../services/comments"; // Import the comment service
 import { useEffect } from "react";
+import Comment from "./Comments";
+import "./Comments.css";
 
 const Post = (props) => {
   const [showAnswer, setShowAnswer] = useState(false);
@@ -87,13 +89,12 @@ const Post = (props) => {
         </button>
         <div>
           <h4>Comments</h4>
-          <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+          <div>
             {comments.map((comment, index) => (
-              <li key={index}>
-                {comment.user_id}: {comment.content}
-              </li>
+              <Comment key={index} comment={comment} />
             ))}
-          </ul>
+          </div>
+
           <input
             type="text"
             value={comment}
