@@ -4,7 +4,7 @@ const Comment = ({ comment }) => {
   return (
     <div className="comment-box">
       <p className="comment-username">
-        <strong>{comment.user_id}</strong> says:
+        <strong>{comment.username}</strong> says:
       </p>
       <p className="comment-content">{comment.content}</p>
     </div>
