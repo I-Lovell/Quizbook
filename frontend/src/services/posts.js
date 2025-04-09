@@ -81,7 +81,6 @@ export const getSinglePostByID = async (token, post_id) => {
       `${BACKEND_URL}/posts/${post_id}`,
       requestOptions
     );
-    // console.log("Response status:", response.status);
 
     if (response.status === 404) {
       throw new Error("Post not found"); // Specific error for 404
@@ -96,7 +95,6 @@ export const getSinglePostByID = async (token, post_id) => {
     }
 
     const data = await response.json();
-    // console.log("Received data:", data);
     return data;
   } catch (error) {
     console.error("Fetch error:", error);
