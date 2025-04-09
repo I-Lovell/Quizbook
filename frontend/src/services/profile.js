@@ -19,7 +19,7 @@ export const getSelf = async (token) => {
   return data;
 };
 
-export const getProfileByID = async (user_id, token) => {
+export const getProfileByUserID = async (user_id, token) => {
   const requestOptions = {
     method: "GET",
     headers: {

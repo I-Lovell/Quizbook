@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import { getPostsByUserID } from "../../services/posts";
-import { getProfileByID } from "../../services/profile";
+import { getProfileByUserID } from "../../services/profile";
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
 import Post from "../../components/Post/Post";
 import "./ProfilePage.css";
@@ -19,7 +19,7 @@ export const OtherUserProfilePage = () => {
   useEffect(() => {
     if (!token) return navigate("/login");
 
-    getProfileByID(user_id, token)
+    getProfileByUserID(user_id, token)
       .then((data) => {
         if (!data.user) {
           console.error("User not found");
@@ -64,3 +64,5 @@ export const OtherUserProfilePage = () => {
 };
 
 export default OtherUserProfilePage;
+
+// IF USER_ID  === CURRENT_USER_ID, REDIRECT TO "/PROFILE/ME"
