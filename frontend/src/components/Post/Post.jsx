@@ -138,7 +138,7 @@ const Post = (props) => {
                 onChange={(event) => setComment(event.target.value)}
                 placeholder="Write a comment..."
               />
-              <button onClick={submitComment}>Post Comment</button>
+              <button className="comment-button" onClick={submitComment}>Post Comment</button>
             </div>
             <div className="post-actions">
               <FaEdit className="edit-icon" onClick={() => setIsEditing(true)}title="Edit Post"/>

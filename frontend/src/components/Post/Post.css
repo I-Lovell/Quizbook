@@ -119,3 +119,16 @@
 .delete-icon:hover {
   color: #e53935;
 }
+
+.comment-button {
+  background-color: #45a049;
+  color: white;
+  border: none;
+  padding: 5px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.comment-button:hover {
+  background-color: #3b8d3f;
+}
