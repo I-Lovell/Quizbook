@@ -131,9 +131,8 @@ func CreatePost(ctx *gin.Context) {
 		return
 	}
 
-	// ============================= Check if the post question is empty =========================
-	if len(requestBody.Question) == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Post question empty"})
+	if len(requestBody.Question) == 0 || len(requestBody.Answer) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Both question and answer are required"})
 		return
 	}
 
