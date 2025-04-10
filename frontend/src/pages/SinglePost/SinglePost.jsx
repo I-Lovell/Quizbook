@@ -10,8 +10,8 @@ import "../Background.css";
 
 export const SinglePost = () => {
     let [post, setPost] = useState(null);
-    const navigate = useNavigate();
     let { post_id } = useParams();
+    const navigate = useNavigate();
     
     useEffect(() => {
         const token = localStorage.getItem("token");

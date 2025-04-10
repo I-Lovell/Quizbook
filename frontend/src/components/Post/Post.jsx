@@ -114,7 +114,18 @@ const Post = (props) => {
 
   return (
     <article className="post-box">
-      <div className="post-user-id">Created by: {props.post.username}</div>
+      <div className="post-user-id">
+        <span>Created by: </span>
+        <span
+          className="post-username"
+          onClick={() => navigate(`/profile/${props.post.user_id}`)}
+          style={{ 
+            cursor: 'pointer',
+          }}
+        >
+        {props.post.username}
+        </span>
+      </div>
       <div className="post-content">
         {isEditing ? (
           <EditPost
