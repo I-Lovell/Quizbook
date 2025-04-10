@@ -1,68 +1,84 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
-import { useNavigate } from "react-router-dom";
-import { signup } from "../../src/services/authentication";
+import { BrowserRouter } from "react-router-dom";
 import { SignupPage } from "../../src/pages/Signup/SignupPage";
+import { signup } from "../../src/services/authentication";
 
+const navigateMock = vi.fn();
 
-// Mocking React Router's useNavigate function
-vi.mock("react-router-dom", () => {
-  const navigateMock = vi.fn();
-  const useNavigateMock = () => navigateMock; // Create a mock function for useNavigate
-  return { useNavigate: useNavigateMock };
+vi.mock("../../src/services/authentication", () => ({
+  signup: vi.fn(),
+}));
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return { ...actual, useNavigate: () => navigateMock, Link: ({ to, children }) => <a href={to}>{children}</a> };
 });
-
-// Mocking the signup service
-vi.mock("../../src/services/authentication", () => {
-  const signupMock = vi.fn();
-  return { signup: signupMock };
-});
-
-// Reusable function for filling out signup form
-const completeSignupForm = async () => {
-  const user = userEvent.setup();
-
-  const emailInputEl = screen.getByLabelText("Email:");
-  const passwordInputEl = screen.getByLabelText("Password:");
-  const submitButtonEl = screen.getByRole("submit-button");
-
-  await user.type(emailInputEl, "test@email.com");
-  await user.type(passwordInputEl, "1234");
-  await user.click(submitButtonEl);
-};
 
 describe("Signup Page", () => {
   beforeEach(() => {
-    vi.resetAllMocks();
+    navigateMock.mockReset();
+    signup.mockReset(); // Reset the signup mock before each test
   });
 
+  const renderWithRouter = (ui) => {
+    return render(<BrowserRouter>{ui}</BrowserRouter>);
+  };
+
   test("allows a user to signup", async () => {
-    render(<SignupPage />);
+    signup.mockResolvedValue(); // Mock successful signup
 
-    await completeSignupForm();
+    renderWithRouter(<SignupPage />);
 
-    expect(signup).toHaveBeenCalledWith("test@email.com", "1234");
+    const usernameInput = screen.getByPlaceholderText("Username");
+    const emailInput = screen.getByPlaceholderText("Email");
+    const passwordInput = screen.getByPlaceholderText("Password");
+    const signupButton = screen.getByText("Sign Up");
+
+    fireEvent.change(usernameInput, { target: { value: "testUser" } });
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.click(signupButton);
+
+    await waitFor(() => {
+      expect(signup).toHaveBeenCalledWith("test@example.com", "password123", "testUser");
+    });
   });
 
   test("navigates to /login on successful signup", async () => {
-    render(<SignupPage />);
+    signup.mockResolvedValue();
 
-    const navigateMock = useNavigate();
+    renderWithRouter(<SignupPage />);
 
-    await completeSignupForm();
+    const usernameInput = screen.getByPlaceholderText("Username");
+    const emailInput = screen.getByPlaceholderText("Email");
+    const passwordInput = screen.getByPlaceholderText("Password");
+    const signupButton = screen.getByText("Sign Up");
 
-    expect(navigateMock).toHaveBeenCalledWith("/login");
+    fireEvent.change(usernameInput, { target: { value: "testUser" } });
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.click(signupButton);
+
+    await waitFor(() => {
+      expect(navigateMock).toHaveBeenCalledWith("/login");
+    });
   });
 
   test("navigates to /signup on unsuccessful signup", async () => {
-    render(<SignupPage />);
+    signup.mockRejectedValue(new Error("Password must be at least 3 characters long"));
 
-    signup.mockRejectedValue(new Error("Error signing up"));
-    const navigateMock = useNavigate();
+    renderWithRouter(<SignupPage />);
 
-    await completeSignupForm();
+    const emailInput = screen.getByPlaceholderText("Email");
+    const passwordInput = screen.getByPlaceholderText("Password");
+    const signupButton = screen.getByText("Sign Up");
 
-    expect(navigateMock).toHaveBeenCalledWith("/signup");
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "" } });
+    fireEvent.click(signupButton);
+
+    await screen.findByText("Password must be at least 3 characters long");
+    expect(navigateMock).not.toHaveBeenCalledWith("/login");
   });
 });
