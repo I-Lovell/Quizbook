@@ -1,7 +1,10 @@
 import { createPost } from '../../services/posts'; // Adjust the path if necessary
+import { useState } from "react";
 import "./CreatePost.css";
 
 const CreatePost = ({ content, setContent }) => {
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
+
   const handleQuestionChange = (event) => {
     const question = event.target.value;
     setContent((prevContent) => ({ ...prevContent, question }));
@@ -15,25 +18,31 @@ const CreatePost = ({ content, setContent }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem("token");
-    if (!token) return; // Handle the case where token is not available
+    if (!token) {
+      setErrorMessage("You must be logged in to create a post.");
+      return;
+    }
 
     if (!content.question || !content.answer) {
-      console.error("Both question and answer fields must be filled.");
-      return; // Prevent submission if fields are empty
+      setErrorMessage("Both question and answer fields must be filled.");
+      return;
     }
 
     try {
-      await createPost(token, content.question, content.answer); // Pass question and answer separately
+      await createPost(token, content.question, content.answer);
       console.log("Post created successfully");
-      setContent({ question: '', answer: '' }); // Reset the form
+      setContent({ question: '', answer: '' });
+      setErrorMessage(""); // Clear error message on success
       window.location.reload();
     } catch (err) {
       console.error("Error creating post:", err);
+      setErrorMessage("Failed to create post. Please try again.");
     }
   };
 
   return (
     <form className="create-post-form" onSubmit={handleSubmit}>
+      {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
       <input 
         id="question"
         type="text"

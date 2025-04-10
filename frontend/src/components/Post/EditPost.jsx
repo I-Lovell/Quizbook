@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const EditPost = ({ post, onSave, onCancel }) => {
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState(""); // State for error messages
     const [editedContent, setEditedContent] = useState({
         question: post.question,
         answer: post.answer,
@@ -12,14 +13,23 @@ const EditPost = ({ post, onSave, onCancel }) => {
 
   const handleSave = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return alert("You must be logged in to edit a post.");
+    if (!token) {
+      setErrorMessage("You must be logged in to edit a post.");
+      return;
+    }
+
+    if (!editedContent.question || !editedContent.answer) {
+      setErrorMessage("Both question and answer fields must be filled.");
+      return; // Prevent saving if fields are empty
+    }
 
     try {
       await updatePost(token, post._id, editedContent.question, editedContent.answer);
       onSave(); // Notify parent to exit edit mode
+      setErrorMessage(""); // Clear error message on success
     } catch (err) {
       console.error("Error updating post:", err);
-      alert("Failed to update post.");
+      setErrorMessage("Failed to update post. Please try again.");
     }
     navigate("/posts");
   };
@@ -28,6 +38,7 @@ const EditPost = ({ post, onSave, onCancel }) => {
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>Edit Post</h2>
+        {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
         <input
           type="text"
           value={editedContent.question}
