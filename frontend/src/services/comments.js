@@ -46,3 +46,23 @@ export const createComment = async (token, post_id, content) => {
 
   return response.json();
 };
+
+export const deleteComment = async (token, comment_id) => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(
+    `${BACKEND_URL}/comments/${comment_id}`,
+    requestOptions
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Unable to delete comment");
+  }
+
+  return response.json();
+};
