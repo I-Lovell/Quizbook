@@ -309,6 +309,7 @@ func convertImageToBase64(imagePath string) (string, error) {
 
 	// Return as data URI
 	return fmt.Sprintf("data:%s;base64,%s", contentType, base64Data), nil
+}
   
 // This function gets a user's profile information from the user_id
 func GetUserByID(ctx *gin.Context) {
