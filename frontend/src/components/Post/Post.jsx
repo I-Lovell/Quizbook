@@ -5,6 +5,7 @@ import { deletePost } from "../../services/posts"; // Import deletePost service
 import { useNavigate } from "react-router-dom";
 import Comment from "./Comments";
 import EditPost from "./EditPost"; // Import the new EditPost component
+import { FaTrash, FaEdit } from "react-icons/fa"; // Import icons from react-icons
 import "./Post.css";
 import "./Comments.css";
 
@@ -139,8 +140,10 @@ const Post = (props) => {
               />
               <button onClick={submitComment}>Post Comment</button>
             </div>
-            <button onClick={() => setIsEditing(true)}>Edit</button>
-            <button onClick={handleDelete}>Delete</button>
+            <div className="post-actions">
+              <FaEdit className="edit-icon" onClick={() => setIsEditing(true)}title="Edit Post"/>
+              <FaTrash className="delete-icon" onClick={handleDelete} title="Delete Post"/>
+            </div>
           </>
         )}
       </div>
