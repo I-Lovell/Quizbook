@@ -4,11 +4,11 @@ import "./EditPost.css"; // Import CSS for modal styling
 import { useNavigate } from "react-router-dom";
 
 const EditPost = ({ post, onSave, onCancel }) => {
-    const navigate = useNavigate();
-    const [errorMessage, setErrorMessage] = useState(""); // State for error messages
-    const [editedContent, setEditedContent] = useState({
-        question: post.question,
-        answer: post.answer,
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
+  const [editedContent, setEditedContent] = useState({
+    question: post.question,
+    answer: post.answer,
   });
 
   const handleSave = async () => {
@@ -24,36 +24,50 @@ const EditPost = ({ post, onSave, onCancel }) => {
     }
 
     try {
-      await updatePost(token, post._id, editedContent.question, editedContent.answer);
+      await updatePost(
+        token,
+        post._id,
+        editedContent.question,
+        editedContent.answer
+      );
       onSave(); // Notify parent to exit edit mode
       setErrorMessage(""); // Clear error message on success
     } catch (err) {
       console.error("Error updating post:", err);
       setErrorMessage("Failed to update post. Please try again.");
     }
-    navigate("/posts");
+    window.location.reload(); // Reload the page to reflect changes
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>Edit Post</h2>
-        {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}{" "}
+        {/* Display error message */}
         <input
           type="text"
           value={editedContent.question}
-          onChange={(e) => setEditedContent({ ...editedContent, question: e.target.value })}
+          onChange={(e) =>
+            setEditedContent({ ...editedContent, question: e.target.value })
+          }
           placeholder="Edit question"
         />
         <input
-            type="text"
+          type="text"
           value={editedContent.answer}
-          onChange={(e) => setEditedContent({ ...editedContent, answer: e.target.value })}
+          onChange={(e) =>
+            setEditedContent({ ...editedContent, answer: e.target.value })
+          }
           placeholder="Edit answer"
         />
         <div className="modal-buttons">
-          <button className="save-button" onClick={handleSave}>Save</button>
-          <button className="cancel-button" onClick={onCancel}>Cancel</button>
+          <button className="save-button" onClick={handleSave}>
+            Save
+          </button>
+          <button className="cancel-button" onClick={onCancel}>
+            Cancel
+          </button>
         </div>
       </div>
     </div>

@@ -89,7 +89,9 @@ const Post = (props) => {
   };
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this post?"
+    );
     if (!confirmDelete) return;
 
     const token = localStorage.getItem("token");
@@ -119,19 +121,19 @@ const Post = (props) => {
         <span
           className="post-username"
           onClick={() => navigate(`/profile/${props.post.user_id}`)}
-          style={{ 
-            cursor: 'pointer',
+          style={{
+            cursor: "pointer",
           }}
         >
-        {props.post.username}
+          {props.post.username}
         </span>
       </div>
       <div className="post-content">
         {isEditing ? (
           <EditPost
             post={props.post}
-            onSave={() => setIsEditing(false)} 
-            onCancel={() => setIsEditing(false)} 
+            onSave={() => setIsEditing(false)}
+            onCancel={() => setIsEditing(false)}
           />
         ) : (
           <>
@@ -151,7 +153,8 @@ const Post = (props) => {
               </button>
             )}
             <p className="like-count">
-              <strong>Likes:</strong> {likes}</p>
+              <strong>Likes:</strong> {likes}
+            </p>
             <button
               className={`like-button ${isLiked ? "unlike" : ""}`}
               onClick={toggleLike}
@@ -171,18 +174,28 @@ const Post = (props) => {
                   onChange={(event) => setComment(event.target.value)}
                   placeholder="Write a comment..."
                 />
-                <button className="comment-button" onClick={submitComment}>Post Comment</button>
+                <button className="comment-button" onClick={submitComment}>
+                  Post Comment
+                </button>
               </div>
-              </div>
-              <div>
-                {comments.map((comment, index) => (
-                  <Comment key={index} comment={comment} />
-                ))}
-              </div>
+            </div>
+            <div>
+              {comments.map((comment, index) => (
+                <Comment key={index} comment={comment} />
+              ))}
+            </div>
             {isPostOwner && ( // Only show edit and delete buttons if the current user owns the post
               <div className="post-actions">
-                <FaEdit className="edit-icon" onClick={() => setIsEditing(true)} title="Edit Post" />
-                <FaTrash className="delete-icon" onClick={handleDelete} title="Delete Post" />
+                <FaEdit
+                  className="edit-icon"
+                  onClick={() => setIsEditing(true)}
+                  title="Edit Post"
+                />
+                <FaTrash
+                  className="delete-icon"
+                  onClick={handleDelete}
+                  title="Delete Post"
+                />
               </div>
             )}
           </>
