@@ -139,7 +139,7 @@ export const updatePost = async (token, post_id, question, answer) => {
 
   const response = await fetch(`${BACKEND_URL}/posts/${post_id}`, requestOptions);
 
-  if (response.status !== 201) {
+  if (response.status !== 200) {
     throw new Error("Unable to update post");
   }
 
