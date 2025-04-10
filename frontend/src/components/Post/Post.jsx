@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { createLike } from "../../services/likes";
 import { createComment, getComments } from "../../services/comments";
+import { deletePost } from "../../services/posts"; // Import deletePost service
+import { useNavigate } from "react-router-dom";
 import Comment from "./Comments";
+import EditPost from "./EditPost"; // Import the new EditPost component
+import { FaTrash, FaEdit } from "react-icons/fa"; // Import icons from react-icons
+import { getSelf } from "../../services/profile"; // Import getSelf service
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import "./Post.css";
 import "./Comments.css";
 
@@ -11,6 +17,10 @@ const Post = (props) => {
   const [isLiked, setIsLiked] = useState(props.post.liked);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(props.post.comments || []);
+  const [isEditing, setIsEditing] = useState(false); // Track edit mode
+  const [currentUserID, setCurrentUserID] = useState(null); // Track current user ID
+  const { token } = useCurrentUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -24,9 +34,24 @@ const Post = (props) => {
         console.error("Error fetching comments:", err);
       }
     };
-
     fetchComments();
   }, [props.post._id]);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      if (!token) return;
+
+      try {
+        const data = await getSelf(token);
+        const currentUserData = data.user;
+        setCurrentUserID(currentUserData.ID); // Set current user ID
+      } catch (err) {
+        console.error("Error fetching current user:", err);
+        navigate("/login");
+      }
+    };
+    fetchCurrentUser();
+  }, [token, navigate]);
 
   const toggleLike = async () => {
     const token = localStorage.getItem("token");
@@ -63,51 +88,87 @@ const Post = (props) => {
     }
   };
 
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    if (!confirmDelete) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) return alert("You must be logged in to delete a post.");
+
+    try {
+      await deletePost(token, props.post._id); // Use props.post._id for deletion
+      alert("Post deleted successfully!");
+      if (props.onDelete) props.onDelete(props.post._id); // Notify parent component if needed
+      navigate("/posts"); // Redirect to posts page after deletion
+    } catch (err) {
+      console.error("Error deleting post:", err);
+      alert("Failed to delete post.");
+    }
+  };
+
   const toggleAnswerVisibility = () => {
     setShowAnswer((prev) => !prev);
   };
+
+  const isPostOwner = currentUserID === props.post.user_id; // Check if the current user owns the post
 
   return (
     <article className="post-box">
       <div className="post-user-id">Created by: {props.post.username}</div>
       <div className="post-content">
-        <p className="post-question">
-          <strong>Question:</strong> {props.post.question}
-        </p>
-        {showAnswer ? (
-          <p className="post-answer">
-            <strong>Answer:</strong> {props.post.answer}
-          </p>
-        ) : (
-          <button
-            className="reveal-answer-button"
-            onClick={toggleAnswerVisibility}
-          >
-            Show Answer
-          </button>
-        )}
-        <p className="like-count">Likes: {likes}</p>
-        <button
-          className={`like-button ${isLiked ? "unlike" : ""}`}
-          onClick={toggleLike}
-        >
-          {isLiked ? "Unlike" : "Like"}
-        </button>
-        <div>
-          <h4>Comments</h4>
-          <div>
-            {comments.map((comment, index) => (
-              <Comment key={index} comment={comment} />
-            ))}
-          </div>
-          <input
-            type="text"
-            value={comment}
-            onChange={(event) => setComment(event.target.value)}
-            placeholder="Write a comment..."
+        {isEditing ? (
+          <EditPost
+            post={props.post}
+            onSave={() => setIsEditing(false)} 
+            onCancel={() => setIsEditing(false)} 
           />
-          <button onClick={submitComment}>Post Comment</button>
-        </div>
+        ) : (
+          <>
+            <p className="post-question">
+              <strong>Question:</strong> {props.post.question}
+            </p>
+            {showAnswer ? (
+              <p className="post-answer">
+                <strong>Answer:</strong> {props.post.answer}
+              </p>
+            ) : (
+              <button
+                className="reveal-answer-button"
+                onClick={toggleAnswerVisibility}
+              >
+                Show Answer
+              </button>
+            )}
+            <p className="like-count">Likes: {likes}</p>
+            <button
+              className={`like-button ${isLiked ? "unlike" : ""}`}
+              onClick={toggleLike}
+            >
+              {isLiked ? "Unlike" : "Like"}
+            </button>
+            <div>
+              <h4>Comments</h4>
+              <div>
+                {comments.map((comment, index) => (
+                  <Comment key={index} comment={comment} />
+                ))}
+              </div>
+              <input
+                type="text"
+                value={comment}
+                onChange={(event) => setComment(event.target.value)}
+                placeholder="Write a comment..."
+              />
+              <button className="comment-button" onClick={submitComment}>Post Comment</button>
+            </div>
+            {isPostOwner && ( // Only show edit and delete buttons if the current user owns the post
+              <div className="post-actions">
+                <FaEdit className="edit-icon" onClick={() => setIsEditing(true)} title="Edit Post" />
+                <FaTrash className="delete-icon" onClick={handleDelete} title="Delete Post" />
+              </div>
+            )}
+          </>
+        )}
       </div>
     </article>
   );
