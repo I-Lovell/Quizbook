@@ -97,8 +97,8 @@ const Post = (props) => {
         {isEditing ? (
           <EditPost
             post={props.post}
-            onSave={() => setIsEditing(false)} // Exit edit mode after saving
-            onCancel={() => setIsEditing(false)} // Exit edit mode on cancel
+            onSave={() => setIsEditing(false)} 
+            onCancel={() => setIsEditing(false)} 
           />
         ) : (
           <>
