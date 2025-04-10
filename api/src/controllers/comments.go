@@ -110,3 +110,62 @@ func CreateComment(ctx *gin.Context) {
 	token, _ := auth.GenerateToken(userID)
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Comment created", "token": token})
 }
+
+func DeleteCommentByID(ctx *gin.Context) {
+	// ========== Get the comment ID from the URL ==========
+	commentID := ctx.Param("id")
+	commentIDUint, err := strconv.ParseUint(commentID, 10, 32)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid comment ID"})
+		return
+	}
+
+	// ========== Get the user ID ==========
+	userIDstr, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+		return
+	}
+
+	// Convert userID to string
+	userIDstring, ok := userIDstr.(string)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid user ID format"})
+		return
+	}
+
+	// Convert userID to uint
+	userID, err := strconv.ParseUint(userIDstring, 10, 32)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ========== Fetch the comment by ID ==========
+	comment, err := models.FetchCommentByID(uint(commentIDUint))
+	if err != nil {
+		if err.Error() == "record not found" {
+			ctx.JSON(http.StatusNotFound, gin.H{"message": "Comment not found"})
+			return
+		}
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ========== Check if the user is the owner of the comment ==========
+	if comment.UserID != uint(userID) {
+		ctx.JSON(http.StatusForbidden, gin.H{"message": "You are not authorised to delete this comment"})
+		return
+	}
+
+	// ========== Delete the comment ==========
+	err = models.DeleteCommentByID(uint(commentIDUint))
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	// ========== Send the response (w/ token) ==========
+	token, _ := auth.GenerateToken(userIDstring)
+	ctx.JSON(http.StatusOK, gin.H{"message": "Comment deleted successfully", "token": token})
+}
