@@ -99,6 +99,9 @@ const ProfileForm = () => {
             )}
           />
         </div>
+        {/* <h2 className="username">
+            {currentUser?.username || "No username"}
+        </h2> */}
         <textarea name="bio" className="bio-edit" {...register("bio")} />
         <br />
         <button
