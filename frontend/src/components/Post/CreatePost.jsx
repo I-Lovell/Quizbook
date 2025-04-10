@@ -16,6 +16,12 @@ const CreatePost = ({ content, setContent }) => {
     event.preventDefault();
     const token = localStorage.getItem("token");
     if (!token) return; // Handle the case where token is not available
+
+    if (!content.question || !content.answer) {
+      console.error("Both question and answer fields must be filled.");
+      return; // Prevent submission if fields are empty
+    }
+
     try {
       await createPost(token, content.question, content.answer); // Pass question and answer separately
       console.log("Post created successfully");
