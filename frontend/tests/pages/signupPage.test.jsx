@@ -30,16 +30,18 @@ describe("Signup Page", () => {
 
     renderWithRouter(<SignupPage />);
 
+    const usernameInput = screen.getByPlaceholderText("Username");
     const emailInput = screen.getByPlaceholderText("Email");
     const passwordInput = screen.getByPlaceholderText("Password");
     const signupButton = screen.getByText("Sign Up");
 
+    fireEvent.change(usernameInput, { target: { value: "testUser" } });
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
     fireEvent.click(signupButton);
 
     await waitFor(() => {
-      expect(signup).toHaveBeenCalledWith("test@example.com", "password123");
+      expect(signup).toHaveBeenCalledWith("test@example.com", "password123", "testUser");
     });
   });
 
