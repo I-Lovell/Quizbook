@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Comment from "./Comments";
 import EditPost from "./EditPost"; // Import the new EditPost component
 import { FaTrash, FaEdit } from "react-icons/fa"; // Import icons from react-icons
+import { getSelf } from "../../services/profile"; // Import getSelf service
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import "./Post.css";
 import "./Comments.css";
 
@@ -16,6 +18,8 @@ const Post = (props) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(props.post.comments || []);
   const [isEditing, setIsEditing] = useState(false); // Track edit mode
+  const [currentUserID, setCurrentUserID] = useState(null); // Track current user ID
+  const { token } = useCurrentUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,9 +34,24 @@ const Post = (props) => {
         console.error("Error fetching comments:", err);
       }
     };
-
     fetchComments();
   }, [props.post._id]);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      if (!token) return;
+
+      try {
+        const data = await getSelf(token);
+        const currentUserData = data.user;
+        setCurrentUserID(currentUserData.ID); // Set current user ID
+      } catch (err) {
+        console.error("Error fetching current user:", err);
+        navigate("/login");
+      }
+    };
+    fetchCurrentUser();
+  }, [token, navigate]);
 
   const toggleLike = async () => {
     const token = localStorage.getItem("token");
@@ -91,6 +110,8 @@ const Post = (props) => {
     setShowAnswer((prev) => !prev);
   };
 
+  const isPostOwner = currentUserID === props.post.user_id; // Check if the current user owns the post
+
   return (
     <article className="post-box">
       <div className="post-user-id">Created by: {props.post.username}</div>
@@ -140,10 +161,12 @@ const Post = (props) => {
               />
               <button className="comment-button" onClick={submitComment}>Post Comment</button>
             </div>
-            <div className="post-actions">
-              <FaEdit className="edit-icon" onClick={() => setIsEditing(true)}title="Edit Post"/>
-              <FaTrash className="delete-icon" onClick={handleDelete} title="Delete Post"/>
-            </div>
+            {isPostOwner && ( // Only show edit and delete buttons if the current user owns the post
+              <div className="post-actions">
+                <FaEdit className="edit-icon" onClick={() => setIsEditing(true)} title="Edit Post" />
+                <FaTrash className="delete-icon" onClick={handleDelete} title="Delete Post" />
+              </div>
+            )}
           </>
         )}
       </div>
