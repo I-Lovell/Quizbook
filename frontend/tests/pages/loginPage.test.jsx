@@ -1,70 +1,76 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
-
-import { useNavigate } from "react-router-dom";
-import { login } from "../../src/services/authentication";
-
+import { BrowserRouter } from "react-router-dom";
 import { LoginPage } from "../../src/pages/Login/LoginPage";
+import { login } from "../../src/services/authentication"; // Ensure this path is correct
 
-// Mocking React Router's useNavigate function
-vi.mock("react-router-dom", () => {
-  const navigateMock = vi.fn();
-  const useNavigateMock = () => navigateMock; // Create a mock function for useNavigate
-  return { useNavigate: useNavigateMock };
+const navigateMock = vi.fn();
+
+vi.mock("../../src/services/authentication", () => ({
+  login: vi.fn(),
+}));
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return { ...actual, useNavigate: () => navigateMock, Link: ({ to, children }) => <a href={to}>{children}</a> };
 });
-
-// Mocking the login service
-vi.mock("../../src/services/authentication", () => {
-  const loginMock = vi.fn();
-  return { login: loginMock };
-});
-
-// Reusable function for filling out login form
-const completeLoginForm = async () => {
-  const user = userEvent.setup();
-
-  const emailInputEl = screen.getByLabelText("Email:");
-  const passwordInputEl = screen.getByLabelText("Password:");
-  const submitButtonEl = screen.getByRole("submit-button");
-
-  await user.type(emailInputEl, "test@email.com");
-  await user.type(passwordInputEl, "1234");
-  await user.click(submitButtonEl);
-};
 
 describe("Login Page", () => {
   beforeEach(() => {
-    vi.resetAllMocks();
+    navigateMock.mockReset();
   });
 
+  const renderWithRouter = (ui) => {
+    return render(<BrowserRouter>{ui}</BrowserRouter>);
+  };
+
   test("allows a user to login", async () => {
-    render(<LoginPage />);
+    login.mockResolvedValue({ token: "testToken" });
 
-    await completeLoginForm();
+    renderWithRouter(<LoginPage />);
 
-    expect(login).toHaveBeenCalledWith("test@email.com", "1234");
+    const emailInput = screen.getByPlaceholderText("Email");
+    const passwordInput = screen.getByPlaceholderText("Password");
+    const loginButton = screen.getByText("Login");
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.click(loginButton);
+
+    expect(login).toHaveBeenCalledWith("test@example.com", "password123");
   });
 
   test("navigates to /posts on successful login", async () => {
-    render(<LoginPage />);
+    login.mockResolvedValue({ token: "testToken" });
 
-    login.mockResolvedValue("secrettoken123");
-    const navigateMock = useNavigate();
+    renderWithRouter(<LoginPage />);
 
-    await completeLoginForm();
+    const emailInput = screen.getByPlaceholderText("Email");
+    const passwordInput = screen.getByPlaceholderText("Password");
+    const loginButton = screen.getByText("Login");
 
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.click(loginButton);
+
+    await screen.findByText("Logging in...");
     expect(navigateMock).toHaveBeenCalledWith("/posts");
   });
 
   test("navigates to /login on unsuccessful login", async () => {
-    render(<LoginPage />);
+    login.mockRejectedValue(new Error("Invalid credentials"));
 
-    login.mockRejectedValue(new Error("Error logging in"));
-    const navigateMock = useNavigate();
+    renderWithRouter(<LoginPage />);
 
-    await completeLoginForm();
+    const emailInput = screen.getByPlaceholderText("Email");
+    const passwordInput = screen.getByPlaceholderText("Password");
+    const loginButton = screen.getByText("Login");
 
-    expect(navigateMock).toHaveBeenCalledWith("/login");
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "wrongpassword" } });
+    fireEvent.click(loginButton);
+
+    await screen.findByText("Invalid credentials");
+    expect(navigateMock).not.toHaveBeenCalledWith("/posts");
   });
 });

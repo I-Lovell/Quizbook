@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { FeedPage } from "../../src/pages/Feed/FeedPage";
@@ -23,22 +23,42 @@ describe("Feed Page", () => {
     window.localStorage.removeItem("token");
   });
 
-  test("It displays posts from the backend", async () => {
+  test("It displays posts sorted by newest first", async () => {
     window.localStorage.setItem("token", "testToken");
 
-    const mockPosts = [{ _id: "12345", question: "Test Post 1" }];
+    const mockPosts = [
+      { _id: "1", question: "Older Post", created_at: "2023-01-01T00:00:00Z" },
+      { _id: "2", question: "Newer Post", created_at: "2023-02-01T00:00:00Z" },
+    ];
 
     getPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
 
     render(<FeedPage />);
 
-    const post = await screen.findByRole("article");
-    expect(post.textContent).toEqual("Test Post 1");
+    const posts = await screen.findAllByRole("article");
+    expect(posts[0].textContent).toContain("Newer Post");
+    expect(posts[1].textContent).toContain("Older Post");
   });
 
-  test("It navigates to login if no token is present", async () => {
+  test("It navigates to login if no token is present", () => {
     render(<FeedPage />);
     const navigateMock = useNavigate();
     expect(navigateMock).toHaveBeenCalledWith("/login");
+  });
+
+  test("It opens and closes the modal for creating a new post", () => {
+    window.localStorage.setItem("token", "testToken");
+
+    render(<FeedPage />);
+
+    const openModalButton = screen.getByText("Make a New Post");
+    fireEvent.click(openModalButton);
+
+    expect(screen.getByText("Create Post")).toBeInTheDocument();
+
+    const closeModalButton = screen.getByText("Close");
+    fireEvent.click(closeModalButton);
+
+    expect(screen.queryByText("Create Post")).not.toBeInTheDocument();
   });
 });
