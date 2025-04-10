@@ -16,6 +16,9 @@ func main() {
 	// Load environment variables
 	env.LoadEnv()
 
+	// Set Gin to release mode to hide messy/unhelpful debug logs when running "go run main.go"
+	gin.SetMode(gin.ReleaseMode) // Comment this out to see debug logs
+
 	// Setup the application
 	app := setupApp()
 
