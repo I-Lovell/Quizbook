@@ -29,7 +29,9 @@ The request body should be a JSON object containing the fields to be updated. Fo
 }
 ```
 
-The above is just an example. Either of the above fields in the post can be included/excluded in the request (i.e. you don't have to incude both)
+The above is just an example. Either of the above fields in the post can be included/excluded in the request (i.e. you don't have to include both).
+
+**Note:** Blank values are not allowed for `question` and `answer` fields. If either field is included in the request, it must contain non-blank content.
 
 ## Response
 
@@ -45,7 +47,7 @@ Returns a JSON object with a success message and a new JWT token.
 
 ### Error Responses
 
-- **400 Bad Request**: If the request body is invalid or the post ID is invalid
+- **400 Bad Request**: If the request body is invalid, the post ID is invalid, or if `question` or `answer` fields are blank
   ```json
   {
     "message": "Invalid request body"
@@ -55,6 +57,18 @@ Returns a JSON object with a success message and a new JWT token.
   ```json
   {
     "message": "Invalid post ID"
+  }
+  ```
+  or
+  ```json
+  {
+    "message": "Question cannot be blank"
+  }
+  ```
+  or
+  ```json
+  {
+    "message": "Answer cannot be blank"
   }
   ```
 
@@ -90,4 +104,5 @@ Returns a JSON object with a success message and a new JWT token.
 - This endpoint requires authentication via JWT token
 - Only the owner of the post can update it
 - Only the fields provided in the request body will be updated
+- Blank values are not allowed for `question` and `answer` fields
 - A new JWT token is returned with each successful response for token refresh purposes 

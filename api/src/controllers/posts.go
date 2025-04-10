@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -487,6 +488,21 @@ func UpdatePost(ctx *gin.Context) {
 	if err := ctx.BindJSON(&updates); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
+	}
+
+	// ============================= Validate question and answer are not blank ==============================
+	if question, exists := updates["question"]; exists {
+		if questionStr, ok := question.(string); ok && len(strings.TrimSpace(questionStr)) == 0 {
+			ctx.JSON(http.StatusBadRequest, gin.H{"message": "Question cannot be blank"})
+			return
+		}
+	}
+
+	if answer, exists := updates["answer"]; exists {
+		if answerStr, ok := answer.(string); ok && len(strings.TrimSpace(answerStr)) == 0 {
+			ctx.JSON(http.StatusBadRequest, gin.H{"message": "Answer cannot be blank"})
+			return
+		}
 	}
 
 	// ============================= Update the post in the database ==============================
