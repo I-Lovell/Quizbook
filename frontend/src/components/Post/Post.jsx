@@ -114,7 +114,18 @@ const Post = (props) => {
 
   return (
     <article className="post-box">
-      <div className="post-user-id">Created by: {props.post.username}</div>
+      <div className="post-user-id">
+        <span>Created by: </span>
+        <span
+          className="post-username"
+          onClick={() => navigate(`/profile/${props.post.user_id}`)}
+          style={{ 
+            cursor: 'pointer',
+          }}
+        >
+        {props.post.username}
+        </span>
+      </div>
       <div className="post-content">
         {isEditing ? (
           <EditPost
@@ -139,28 +150,35 @@ const Post = (props) => {
                 Show Answer
               </button>
             )}
-            <p className="like-count">Likes: {likes}</p>
+            <p className="like-count">
+              <strong>Likes:</strong> {likes}</p>
             <button
               className={`like-button ${isLiked ? "unlike" : ""}`}
               onClick={toggleLike}
             >
               {isLiked ? "Unlike" : "Like"}
             </button>
+            <br />
+            <br />
             <div>
-              <h4>Comments</h4>
+              <strong>Comments:</strong>
+              <br />
+              <br />
+              <div className="comment-input">
+                <input
+                  type="text"
+                  value={comment}
+                  onChange={(event) => setComment(event.target.value)}
+                  placeholder="Write a comment..."
+                />
+                <button className="comment-button" onClick={submitComment}>Post Comment</button>
+              </div>
+              </div>
               <div>
                 {comments.map((comment, index) => (
                   <Comment key={index} comment={comment} />
                 ))}
               </div>
-              <input
-                type="text"
-                value={comment}
-                onChange={(event) => setComment(event.target.value)}
-                placeholder="Write a comment..."
-              />
-              <button className="comment-button" onClick={submitComment}>Post Comment</button>
-            </div>
             {isPostOwner && ( // Only show edit and delete buttons if the current user owns the post
               <div className="post-actions">
                 <FaEdit className="edit-icon" onClick={() => setIsEditing(true)} title="Edit Post" />

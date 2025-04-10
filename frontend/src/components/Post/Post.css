@@ -12,6 +12,22 @@
   font-weight: bold;
   color: #555;
   margin-bottom: 8px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.post-username {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.post-username:hover {
+  color: #0056b3;
+  text-decoration: underline;
 }
 
 .post-content {

@@ -68,7 +68,6 @@ export const getSinglePostByID = async (token, post_id) => {
     throw new Error("Post ID is required");
   }
 
-  console.log("Fetching post with ID:", post_id);
   const requestOptions = {
     method: "GET",
     headers: {

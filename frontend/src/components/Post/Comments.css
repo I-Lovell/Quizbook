@@ -11,6 +11,13 @@
     color: #333;
     margin: 0 0 4px 0;
     font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .comment-username:hover {
+    color: #0056b3;
+    text-decoration: underline;
   }
   
   .comment-content {
