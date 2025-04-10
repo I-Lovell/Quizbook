@@ -36,7 +36,6 @@ export const fetchSelfPosts = async (token) => {
   }
 
   const data = await response.json();
-  console.log("Fetched posts:", data);
   return data;
 };
 

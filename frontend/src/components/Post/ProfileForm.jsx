@@ -19,6 +19,7 @@ const ProfileForm = () => {
     defaultValues: {
       profilePicture: currentUser?.profilePicture || "",
       bio: currentUser?.bio || "",
+      username: currentUser?.username || "",
     },
   });
 
@@ -97,11 +98,9 @@ const ProfileForm = () => {
                 />
               </div>
             )}
-          />
+            />
         </div>
-        {/* <h2 className="username">
-            {currentUser?.username || "No username"}
-        </h2> */}
+
         <textarea name="bio" className="bio-edit" {...register("bio")} />
         <br />
         <button
