@@ -100,3 +100,48 @@ func DeleteUser(id uint) error {
 	// Commit the transaction
 	return tx.Commit().Error
 }
+
+// RestoreDeletedUser restores a soft-deleted user and their related content (posts, likes, comments)
+func RestoreDeletedUser(email string) (*User, error) {
+	// Begin a transaction
+	tx := Database.Begin()
+
+	// Find the soft-deleted user by email (with unscoped to see deleted records)
+	var user User
+	if err := tx.Unscoped().Where("email = ? AND deleted_at IS NOT NULL", email).First(&user).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	// Restore the user by clearing the DeletedAt field
+	if err := tx.Unscoped().Model(&user).Update("deleted_at", nil).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	// Restore the user's posts
+	if err := tx.Unscoped().Model(&Post{}).Where("user_id = ? AND deleted_at IS NOT NULL", user.ID).Update("deleted_at", nil).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	// Restore the user's likes
+	if err := tx.Unscoped().Model(&Like{}).Where("user_id = ? AND deleted_at IS NOT NULL", user.ID).Update("deleted_at", nil).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	// Restore the user's comments
+	if err := tx.Unscoped().Model(&Comment{}).Where("user_id = ? AND deleted_at IS NOT NULL", user.ID).Update("deleted_at", nil).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	// Commit the transaction
+	if err := tx.Commit().Error; err != nil {
+		return nil, err
+	}
+
+	// Return the restored user
+	return &user, nil
+}
