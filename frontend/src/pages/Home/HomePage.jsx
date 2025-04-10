@@ -50,7 +50,7 @@ export const HomePage = () => {
           quiz-lovers!
         </p>
       </div>
-      ;
+
       <div className="TypeAnimation2a">
         <CustomTypeAnimation
           sequence={[
