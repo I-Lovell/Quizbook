@@ -28,13 +28,18 @@ describe("SinglePost Page", () => {
   test("It displays the post when loaded successfully", async () => {
     window.localStorage.setItem("token", "testToken");
 
-    const mockPost = { _id: "12345", question: "Test Post" };
+    const mockPost = { username: "12345", question: "Test Post", answer: "Test Answer" };
     getSinglePostByID.mockResolvedValue({ post: mockPost, token: "newToken" });
 
     renderWithRouter(<SinglePost />);
 
-    const post = await screen.findByText("Test Post");
-    expect(post).toBeInTheDocument();
+    const username = await screen.findByText("Created by: 12345", { exact: false });
+    const question = await screen.findByText("Question: Test Post", { exact: false });
+    const answer = await screen.findByText("Answer: Test Answer", { exact: false });
+
+    expect(username).toBeInTheDocument();
+    expect(question).toBeInTheDocument();
+    expect(answer).toBeInTheDocument();
   });
 
   test("It navigates to login if no token is present", () => {
