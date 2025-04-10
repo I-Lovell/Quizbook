@@ -57,7 +57,7 @@ export const ProfilePage = () => {
           {userPosts.length === 0 ? (
             <p>You haven’t posted anything yet.</p>
           ) : (
-            <div className="feed" role="feed">
+            <div role="feed">
               {userPosts.map((post) => (
                 <Post post={post} key={post._id} hideUsername={true} />
               ))}
