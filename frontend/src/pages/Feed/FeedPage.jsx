@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
-import { redirect, useNavigate } from "react-router-dom";
 import { getPosts } from "../../services/posts";
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
 import PostPreview from "../../components/Post/PostPreview";

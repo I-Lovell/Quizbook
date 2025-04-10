@@ -1,5 +1,5 @@
-import { createPost } from '../../services/posts'; // Adjust the path if necessary
 import { useState } from "react";
+import { createPost } from '../../services/posts'; // Adjust the path if necessary
 import "./CreatePost.css";
 
 const CreatePost = ({ content, setContent }) => {

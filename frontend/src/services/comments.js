@@ -40,7 +40,7 @@ export const createComment = async (token, post_id, content) => {
   const response = await fetch(`${BACKEND_URL}/comments`, requestOptions);
 
   if (response.status !== 201) {
-    console.error("Error creating comment:", response.status, responseBody);
+    console.error("Error creating comment:", response.status);
     throw new Error("Unable to create comment");
   }
 

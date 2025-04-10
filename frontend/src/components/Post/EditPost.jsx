@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { updatePost } from "../../services/posts"; // Import updatePost service
 import "./EditPost.css"; // Import CSS for modal styling
-import { useNavigate } from "react-router-dom";
 
 const EditPost = ({ post, onSave, onCancel }) => {
     const navigate = useNavigate();
