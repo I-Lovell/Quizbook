@@ -6,6 +6,8 @@ const ProfileDetails = ({ toggleEdit }) => {
   const { currentUser } = useCurrentUser();
   return (
     <div>
+      <div className="profile-picture-container">
+      <div className="profilePicture">
       <img
         src={
           currentUser?.profilePicture ||
@@ -14,11 +16,16 @@ const ProfileDetails = ({ toggleEdit }) => {
         alt="Profile"
         className="profile-picture"
       />
+      </div>
+      </div>
+      <h2 className="username">
+        {currentUser?.username || "No username"}
+      </h2>
       <p className="bio">
         {currentUser?.bio || "This is a sample bio. You can add your own bio."}
       </p>
       <button className="edit-profile-button" onClick={() => toggleEdit(true)}>
-        Edit
+        Edit bio or profile picture
       </button>
     </div>
   );

@@ -78,7 +78,6 @@ export const OtherUsersProfilePage = () => {
         <div className="profile-left">
           <div className="profile-picture-container">
             <div className="profilePicture">
-              <div className="profile-picture-wrapper">
                 <img
                   src={
                     userProfileData?.profilePicture ||
@@ -87,7 +86,6 @@ export const OtherUsersProfilePage = () => {
                   alt="Profile"
                   className="profile-picture"
                 />
-              </div>
             </div>
           </div>
           <h2 className="username">
