@@ -53,7 +53,7 @@
 
 /* Right column: Posts */
 .profile-right {
-    flex: 4;
+    flex: 6;
     position: relative;
     align-items: center;
 }
