@@ -14,6 +14,11 @@ const EditPost = ({ post, onSave, onCancel }) => {
     const token = localStorage.getItem("token");
     if (!token) return alert("You must be logged in to edit a post.");
 
+    if (!editedContent.question || !editedContent.answer) {
+      console.error("Both question and answer fields must be filled.");
+      return; // Prevent saving if fields are empty
+    }
+
     try {
       await updatePost(token, post._id, editedContent.question, editedContent.answer);
       onSave(); // Notify parent to exit edit mode
