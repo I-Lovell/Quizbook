@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
-import {  useCurrentUser } from "../../contexts/CurrentUserContext";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import { getPostsByUserID } from "../../services/posts";
 import { getProfileByUserID, getSelf } from "../../services/profile";
 import LoggedInHeader from "../../components/Post/LoggedInHeader";
@@ -93,10 +93,9 @@ export const OtherUsersProfilePage = () => {
           <h2 className="username">
             {userProfileData?.username || "No username"}
           </h2>
-        <p className="bio">
-        {userProfileData?.bio || "This user has no bio."}
-        </p>        
-
+          <p className="bio">
+            {userProfileData?.bio || "This user has no bio."}
+          </p>
         </div>
         <div className="vertical-line"></div>
         <div className="profile-right">
@@ -104,7 +103,7 @@ export const OtherUsersProfilePage = () => {
           {userPosts.length === 0 ? (
             <p>This user hasn’t posted anything yet.</p>
           ) : (
-            <div className="feed" role="feed">
+            <div role="feed">
               {userPosts.map((post) => (
                 <Post post={post} key={post._id} hideUsername={true} />
               ))}
