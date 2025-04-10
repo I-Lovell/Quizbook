@@ -18,8 +18,8 @@ export const LoggedInHeader = ({ onLogout }) => {
         <Fader className="fader-9" delay={Math.random() * 4000} />
       </div>
       <div className="logo-container">
-        <img src={logo} alt="Quizler Logo" className="logo" />
-        <h1 className="title">QuizBook</h1>
+        <Link to="/posts"><img src={logo} alt="Quizler Logo" className="logo" /> </Link>
+        <Link to="/posts"><h1 className="title">QuizBook</h1> </Link>
       </div>
       <nav className="nav">
         <Link to="/posts" className="nav-button">Home</Link>
