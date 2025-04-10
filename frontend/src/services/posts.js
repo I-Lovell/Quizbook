@@ -104,3 +104,44 @@ export const getSinglePostByID = async (token, post_id) => {
     throw error;
   }
 };
+
+export const deletePost = async (token, post_id) => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(`${BACKEND_URL}/posts/${post_id}`, requestOptions);
+
+  if (response.status !== 200) {
+    throw new Error("Unable to delete post");
+  }
+
+  return response.json();
+}
+
+export const updatePost = async (token, post_id, question, answer) => {
+  const payload = {
+    question: question,
+    answer: answer,
+  };
+
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  };
+
+  const response = await fetch(`${BACKEND_URL}/posts/${post_id}`, requestOptions);
+
+  if (response.status !== 201) {
+    throw new Error("Unable to update post");
+  }
+
+  return response.json();
+};
