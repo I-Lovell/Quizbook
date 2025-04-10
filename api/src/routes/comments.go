@@ -11,4 +11,5 @@ func setupCommentRoutes(baseRouter *gin.RouterGroup) {
 
 	comments.POST("", middleware.AuthenticationMiddleware, controllers.CreateComment)
 	comments.GET("/post/:post_id", middleware.AuthenticationMiddleware, controllers.GetCommentsByPostID)
-} 
+	comments.DELETE("/:id", middleware.AuthenticationMiddleware, controllers.DeleteCommentByID)
+}

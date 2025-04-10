@@ -28,4 +28,29 @@ func FetchCommentsByPostID(postID uint) (*[]Comment, error) {
 		return &[]Comment{}, err
 	}
 	return &comments, nil
-} 
+}
+
+func FetchCommentByID(id uint) (*Comment, error) {
+	var comment Comment
+	err := Database.First(&comment, id).Error
+	if err != nil {
+		return &Comment{}, err
+	}
+	return &comment, nil
+}
+
+func DeleteCommentByID(id uint) error {
+	var comment Comment
+
+	// Find the comment
+	if err := Database.First(&comment, id).Error; err != nil {
+		return err
+	}
+
+	// Delete the comment record from the database
+	if err := Database.Delete(&comment).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
