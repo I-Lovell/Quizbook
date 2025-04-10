@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
@@ -90,7 +90,7 @@ export const useCurrentUser = () => {
   return context;
 };
 
-export const getCurrentUserId = (token) => {
+export const getCurrentUserId = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   if (currentUser && currentUser.user_id) {

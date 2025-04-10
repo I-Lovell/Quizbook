@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import { updateProfile, deleteProfile } from "../../services/profile";
-import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import "./ProfilePicture.css";
 
 const ProfileForm = () => {

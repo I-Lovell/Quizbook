@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import "./CreateAccount.css";
 import { useNavigate } from "react-router-dom";
-import { signup } from "../../services/authentication";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signup } from "../../services/authentication";
+import "./CreateAccount.css";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),

@@ -6,15 +6,15 @@ import LoggedInHeader from "../../components/Post/LoggedInHeader";
 import ProfileForm from "../../components/Post/ProfileForm";
 import ProfileDetails from "../../components/Post/ProfileDetails";
 import Post from "../../components/Post/Post";
-import "../Background.css";
 import "./ProfilePage.css";
+import "../Background.css";
 import "../Feed/FeedPage.css";
 
 export const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
-  const navigate = useNavigate();
   const { token, logout } = useCurrentUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) return navigate("/login");

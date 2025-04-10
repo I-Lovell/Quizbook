@@ -14,9 +14,9 @@ export const OtherUsersProfilePage = () => {
   const [userPosts, setUserPosts] = useState([]);
   const [userProfileData, setProfileData] = useState([]);
   const [currentUserID, setCurrentUserID] = useState(null);
-  const navigate = useNavigate();
   const { token, logout } = useCurrentUser();
   const { user_id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) return navigate("/login");
@@ -63,7 +63,7 @@ export const OtherUsersProfilePage = () => {
         console.error(err);
         navigate("/posts");
       });
-  }, [token, user_id, navigate]);
+  }, [token, user_id, navigate, currentUserID]);
 
   const logOutHandler = () => {
     logout();
@@ -114,5 +114,3 @@ export const OtherUsersProfilePage = () => {
 };
 
 export default OtherUsersProfilePage;
-
-// IF USER_ID  === CURRENT_USER_ID, REDIRECT TO "/PROFILE/ME"

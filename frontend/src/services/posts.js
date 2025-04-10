@@ -142,7 +142,6 @@ export const updatePost = async (token, post_id, question, answer) => {
   return response.json();
 };
 
-
 export const getPostsByUserID = async (user_id, token) => {
   const requestOptions = {
     method: "GET",
@@ -159,4 +158,3 @@ export const getPostsByUserID = async (user_id, token) => {
   const data = await response.json();
   return data;
 }
-

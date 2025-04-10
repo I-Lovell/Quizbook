@@ -1,5 +1,5 @@
-import CustomTypeAnimation from "../../components/Post/CustomTypeAnimation";
 import Header from "../../components/Post/Header";
+import CustomTypeAnimation from "../../components/Post/CustomTypeAnimation";
 import Login from "../../components/Post/Login";
 import "../Background.css";
 

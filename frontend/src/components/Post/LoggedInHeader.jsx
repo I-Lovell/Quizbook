@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import "./Header.css";
 import logo from "/Quizler-Logo.png";
 import Fader from "./Fader";
+import "./Header.css";
 
 export const LoggedInHeader = ({ onLogout }) => {
   return (

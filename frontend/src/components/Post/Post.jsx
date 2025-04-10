@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import { createLike } from "../../services/likes";
 import { createComment, getComments } from "../../services/comments";
 import { deletePost } from "../../services/posts"; // Import deletePost service
-import { useNavigate } from "react-router-dom";
+import { getSelf } from "../../services/profile"; // Import getSelf service
 import Comment from "./Comments";
 import EditPost from "./EditPost"; // Import the new EditPost component
 import { FaTrash, FaEdit } from "react-icons/fa"; // Import icons from react-icons
-import { getSelf } from "../../services/profile"; // Import getSelf service
-import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import "./Post.css";
 import "./Comments.css";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import "./ProfilePicture.css";
 

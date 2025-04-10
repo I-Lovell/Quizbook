@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import { login as loginService } from "../../services/authentication";
-import "./Login.css";
 import { useForm } from "react-hook-form";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import { login as loginService } from "../../services/authentication";
+import "./Login.css";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ export const Login = () => {
         </button>
       </form>
       <p className="signup-text">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link className="loginButton" to="/signup">
           Sign Up Here
         </Link>
