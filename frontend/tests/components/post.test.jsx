@@ -21,6 +21,6 @@ describe("Post", () => {
     renderWithRouterAndProvider(<Post post={testPost} />);
 
     const article = screen.getByRole("article");
-    expect(article.textContent).toBe("Created by: 123Question: Show AnswerLikes: LikeCommentsPost Comment");
+    expect(article.textContent).toBe("Created by: 123Question: Show AnswerLikes: LikeComments:Post Comment");
   });
 });

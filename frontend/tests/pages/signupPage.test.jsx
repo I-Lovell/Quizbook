@@ -3,6 +3,7 @@ import { vi } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import { SignupPage } from "../../src/pages/Signup/SignupPage";
 import { signup } from "../../src/services/authentication";
+import { CurrentUserProvider } from "../../src/contexts/CurrentUserContext";
 
 const navigateMock = vi.fn();
 
@@ -21,14 +22,14 @@ describe("Signup Page", () => {
     signup.mockReset(); // Reset the signup mock before each test
   });
 
-  const renderWithRouter = (ui) => {
-    return render(<BrowserRouter>{ui}</BrowserRouter>);
-  };
+  const renderWithRouterAndProvider = (ui) => {
+  return render(<BrowserRouter>{ui}</BrowserRouter>, { wrapper: CurrentUserProvider });
+};
 
   test("allows a user to signup", async () => {
     signup.mockResolvedValue(); // Mock successful signup
 
-    renderWithRouter(<SignupPage />);
+    renderWithRouterAndProvider(<SignupPage />);
 
     const usernameInput = screen.getByPlaceholderText("Username");
     const emailInput = screen.getByPlaceholderText("Email");
@@ -48,7 +49,7 @@ describe("Signup Page", () => {
   test("navigates to /login on successful signup", async () => {
     signup.mockResolvedValue();
 
-    renderWithRouter(<SignupPage />);
+    renderWithRouterAndProvider(<SignupPage />);
 
     const usernameInput = screen.getByPlaceholderText("Username");
     const emailInput = screen.getByPlaceholderText("Email");
@@ -68,12 +69,14 @@ describe("Signup Page", () => {
   test("navigates to /signup on unsuccessful signup", async () => {
     signup.mockRejectedValue(new Error("Password must be at least 3 characters long"));
 
-    renderWithRouter(<SignupPage />);
+    renderWithRouterAndProvider(<SignupPage />);
 
+    const usernameInput = screen.getByPlaceholderText("Username");
     const emailInput = screen.getByPlaceholderText("Email");
     const passwordInput = screen.getByPlaceholderText("Password");
     const signupButton = screen.getByText("Sign Up");
 
+    fireEvent.change(usernameInput, { target: { value: "testUser" } });
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(passwordInput, { target: { value: "" } });
     fireEvent.click(signupButton);

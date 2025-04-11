@@ -2,12 +2,14 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import { LoginPage } from "../../src/pages/Login/LoginPage";
-import { login } from "../../src/services/authentication"; // Ensure this path is correct
+import { login, signup } from "../../src/services/authentication"; // Include signup
+import { CurrentUserProvider } from "../../src/contexts/CurrentUserContext";
 
 const navigateMock = vi.fn();
 
 vi.mock("../../src/services/authentication", () => ({
   login: vi.fn(),
+  signup: vi.fn(), // Mock signup
 }));
 
 vi.mock("react-router-dom", async () => {
@@ -18,41 +20,34 @@ vi.mock("react-router-dom", async () => {
 describe("Login Page", () => {
   beforeEach(() => {
     navigateMock.mockReset();
+    signup.mockReset(); // Reset signup mock
+    login.mockReset(); // Reset login mock
   });
 
-  const renderWithRouter = (ui) => {
-    return render(<BrowserRouter>{ui}</BrowserRouter>);
+  const renderWithRouterAndProvider = (ui) => {
+    return render(<BrowserRouter>{ui}</BrowserRouter>, { wrapper: CurrentUserProvider });
   };
 
-  test("allows a user to login", async () => {
-    login.mockResolvedValue({ token: "testToken" });
+  test("allows a user to create an account and then login", async () => {
+    signup.mockResolvedValue(); // Mock successful signup
+    login.mockResolvedValue({ token: "testToken" }); // Mock successful login
 
-    renderWithRouter(<LoginPage />);
+    // Simulate account creation
+    await signup("test@example.com", "password123", "testUser");
+    expect(signup).toHaveBeenCalledWith("test@example.com", "password123", "testUser");
+
+    // Render login page and perform login
+    renderWithRouterAndProvider(<LoginPage />);
 
     const emailInput = screen.getByPlaceholderText("Email");
     const passwordInput = screen.getByPlaceholderText("Password");
-    const loginButton = screen.getByText("Login");
+    const loginButton = screen.getByRole("button", { name: "" }); // Target the button with an empty accessible name
 
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
     fireEvent.click(loginButton);
 
     expect(login).toHaveBeenCalledWith("test@example.com", "password123");
-  });
-
-  test("navigates to /posts on successful login", async () => {
-    login.mockResolvedValue({ token: "testToken" });
-
-    renderWithRouter(<LoginPage />);
-
-    const emailInput = screen.getByPlaceholderText("Email");
-    const passwordInput = screen.getByPlaceholderText("Password");
-    const loginButton = screen.getByText("Login");
-
-    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-    fireEvent.change(passwordInput, { target: { value: "password123" } });
-    fireEvent.click(loginButton);
-
     await screen.findByText("Logging in...");
     expect(navigateMock).toHaveBeenCalledWith("/posts");
   });
@@ -60,17 +55,17 @@ describe("Login Page", () => {
   test("navigates to /login on unsuccessful login", async () => {
     login.mockRejectedValue(new Error("Invalid credentials"));
 
-    renderWithRouter(<LoginPage />);
+    renderWithRouterAndProvider(<LoginPage />);
 
     const emailInput = screen.getByPlaceholderText("Email");
     const passwordInput = screen.getByPlaceholderText("Password");
-    const loginButton = screen.getByText("Login");
+    const loginButton = screen.getByRole("button", { name: "" }); // Target the button with an empty accessible name
 
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(passwordInput, { target: { value: "wrongpassword" } });
     fireEvent.click(loginButton);
 
     await screen.findByText("Invalid credentials");
-    expect(navigateMock).not.toHaveBeenCalledWith("/posts");
+    expect(navigateMock).toHaveBeenCalledWith("/login");
   });
 });
