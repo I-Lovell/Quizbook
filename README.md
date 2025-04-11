@@ -68,7 +68,8 @@ picture and editing their bio
 - Liked quizzes will appear on your profile/shown on another webpage
 
 **Searching and sorting posts**
-- Search functionality for posts & users with different search parameters (by tag, by quality, by particular users etc.)
+- Search functionality for posts & users with different search parameters  
+(by tag, by quality, by particular users etc.)
 - Sorting by time posted (ascending/descending, quiz quality etc.)
 
 **Styling and misc.**
@@ -91,7 +92,7 @@ as well as documentation for the starter codebase, and the overall application a
 
 ### Card wall
 
-We developed this project with an **agile** workflow, working in week-long sprints and using 
+We developed this project with an **agile** workflow, working in week-long sprints and using  
 a Trello board to track our tasks and help plan sprints.
 
 Link to our Trello board:
