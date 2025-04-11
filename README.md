@@ -10,20 +10,30 @@ In this project, we started with a lean, existing application as we worked
 to **improve and extend** it over a two week period. A significant part of 
 this challenge was to familiarise yourself with the codebase we inherited. 
 Another part of the challenge was working in separate frontend and backend 
-teams writing different languages: JavaScript (React) and Golang.
+teams writing different languages: JavaScript (React) and Go.
 
 ### Structure
 
 This repo contains two applications:
 
 - A frontend React App
-- A backend api Golang server
+- A backend api Go server
 
 These two applications communicates through HTTP requests, passing JSON
 data between each other, and need to be run separately.
 
-HAVE A LIST OF LANGUAGE, FRAMEWORKS, AND ADDED LIBRARIES/DEPENDENCIES HERE:
-e.g. Added dependencies to use Zod for Authentication and React-Hook-Form
+The frontend React app uses:
+- `react-router`
+- `react-router-dom`
+- `react-type-animation`
+- `vite`
+- `es-lint`
+- `vitest`
+- `zod`
+
+The backend Go app uses:
+
+`postgreSQL` for our database
 
 ### Features
 
@@ -43,7 +53,30 @@ picture and editing their bio
 
 ### Out of Scope Features
 
-LIST HERE
+**Friends**
+- Users can add other users as friends
+- Users can accept/decline invites for friends
+- Users can view their friend-list
+
+**Quizes**
+- Posts are entire quizzes instead of single question-answers
+- Different question types (e.g. multiple choice, true/false, etc.)
+- Users can tag quizzes (e.g. by topic, by question types, etc.)
+- Users can vote on a scale for difficulty of quiz
+- Users can rate a quiz on quality (out of 5 stars)
+- Users can create collections of quizzes
+- Liked quizzes will appear on your profile/shown on another webpage
+
+**Searching and sorting posts**
+- Search functionality for posts & users with different search parameters (by tag, by quality, by particular users etc.)
+- Sorting by time posted (ascending/descending, quiz quality etc.)
+
+**Styling and misc.**
+- Optimising for use on a mobile device
+- Accessibility features for people with disabilities
+- Continuous scrolling on webpage
+- Animated buttons
+- Refining the UX/UI
 
 ### Video demo
 
@@ -58,7 +91,8 @@ as well as documentation for the starter codebase, and the overall application a
 
 ### Card wall
 
-We developed this project with an **agile** approach.
+We developed this project with an **agile** workflow, working in week-long sprints and using 
+a Trello board to track our tasks and help plan sprints.
 
 Link to our Trello board:
 https://trello.com/b/WVKeI5oP
