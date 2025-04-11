@@ -3,6 +3,7 @@ import { vi } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import { SinglePost } from "../../src/pages/SinglePost/SinglePost";
 import { getSinglePostByID } from "../../src/services/posts";
+import { CurrentUserProvider } from "../../src/contexts/CurrentUserContext";
 
 const navigateMock = vi.fn();
 
@@ -21,8 +22,8 @@ describe("SinglePost Page", () => {
     navigateMock.mockReset();
   });
 
-  const renderWithRouter = (ui) => {
-    return render(<BrowserRouter>{ui}</BrowserRouter>);
+  const renderWithRouterAndProvider = (ui) => {
+    return render(<BrowserRouter>{ui}</BrowserRouter>, { wrapper: CurrentUserProvider });
   };
 
   test("It displays the post when loaded successfully", async () => {
@@ -31,11 +32,11 @@ describe("SinglePost Page", () => {
     const mockPost = { username: "12345", question: "Test Post", answer: "Test Answer" };
     getSinglePostByID.mockResolvedValue({ post: mockPost, token: "newToken" });
 
-    renderWithRouter(<SinglePost />);
+    renderWithRouterAndProvider(<SinglePost />);
 
-    const username = await screen.findByText("Created by: 12345", { exact: false });
-    const question = await screen.findByText("Question: Test Post", { exact: false });
-    const answer = await screen.findByText("Answer: Test Answer", { exact: false });
+    const username = await screen.findByText((content) => content.includes("Created by: 12345"));
+    const question = await screen.findByText((content) => content.includes("Question: Test Post"));
+    const answer = await screen.findByText((content) => content.includes("Answer: Test Answer"));
 
     expect(username).toBeInTheDocument();
     expect(question).toBeInTheDocument();
@@ -43,7 +44,7 @@ describe("SinglePost Page", () => {
   });
 
   test("It navigates to login if no token is present", () => {
-    renderWithRouter(<SinglePost />);
+    renderWithRouterAndProvider(<SinglePost />);
     expect(navigateMock).toHaveBeenCalledWith("/login");
   });
 
@@ -52,7 +53,7 @@ describe("SinglePost Page", () => {
 
     getSinglePostByID.mockRejectedValue(new Error("Post not found"));
 
-    renderWithRouter(<SinglePost />);
+    renderWithRouterAndProvider(<SinglePost />);
     await screen.findByText("Loading post..."); // Ensure the component renders before checking navigation
     expect(navigateMock).toHaveBeenCalledWith("/posts");
   });

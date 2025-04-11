@@ -1,24 +1,26 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
-
+import { BrowserRouter } from "react-router-dom";
+import { CurrentUserProvider } from "../../src/contexts/CurrentUserContext";
 import { FeedPage } from "../../src/pages/Feed/FeedPage";
 import { getPosts } from "../../src/services/posts";
 import { useNavigate } from "react-router-dom";
 
-// Mocking the getPosts service
-vi.mock("../../src/services/posts", () => {
-  const getPostsMock = vi.fn();
-  return { getPosts: getPostsMock };
-});
+vi.mock("../../src/services/posts", () => ({
+  getPosts: vi.fn(),
+}));
 
-// Mocking React Router's useNavigate function
-vi.mock("react-router-dom", () => {
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
   const navigateMock = vi.fn();
-  const useNavigateMock = () => navigateMock; // Create a mock function for useNavigate
-  return { useNavigate: useNavigateMock };
+  return { ...actual, useNavigate: () => navigateMock };
 });
 
-describe("Feed Page", () => {
+const renderWithRouterAndProvider = (ui) => {
+  return render(<BrowserRouter>{ui}</BrowserRouter>, { wrapper: CurrentUserProvider });
+};
+
+describe("FeedPage", () => {
   beforeEach(() => {
     window.localStorage.removeItem("token");
   });
@@ -31,9 +33,9 @@ describe("Feed Page", () => {
       { _id: "2", question: "Newer Post", created_at: "2023-02-01T00:00:00Z" },
     ];
 
-    getPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
+    getPosts.mockResolvedValue({ posts: mockPosts });
 
-    render(<FeedPage />);
+    renderWithRouterAndProvider(<FeedPage />);
 
     const posts = await screen.findAllByRole("article");
     expect(posts[0].textContent).toContain("Newer Post");
@@ -41,7 +43,7 @@ describe("Feed Page", () => {
   });
 
   test("It navigates to login if no token is present", () => {
-    render(<FeedPage />);
+    renderWithRouterAndProvider(<FeedPage />);
     const navigateMock = useNavigate();
     expect(navigateMock).toHaveBeenCalledWith("/login");
   });
@@ -49,12 +51,12 @@ describe("Feed Page", () => {
   test("It opens and closes the modal for creating a new post", () => {
     window.localStorage.setItem("token", "testToken");
 
-    render(<FeedPage />);
+    renderWithRouterAndProvider(<FeedPage />);
 
     const openModalButton = screen.getByText("Make a New Post");
     fireEvent.click(openModalButton);
 
-    expect(screen.getByText("Create Post")).toBeInTheDocument();
+    expect(screen.getByText("Submit")).toBeInTheDocument();
 
     const closeModalButton = screen.getByText("Close");
     fireEvent.click(closeModalButton);

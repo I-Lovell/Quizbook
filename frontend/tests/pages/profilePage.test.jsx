@@ -1,5 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
+import { BrowserRouter } from "react-router-dom";
+import { CurrentUserProvider } from "../../src/contexts/CurrentUserContext";
 import { ProfilePage } from "../../src/pages/Profile/ProfilePage";
 import { fetchSelfPosts } from "../../src/services/posts";
 import { useNavigate } from "react-router-dom";
@@ -8,11 +10,15 @@ vi.mock("../../src/services/posts", () => ({
   fetchSelfPosts: vi.fn(),
 }));
 
-vi.mock("react-router-dom", () => {
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
   const navigateMock = vi.fn();
-  const useNavigateMock = () => navigateMock;
-  return { useNavigate: useNavigateMock };
+  return { ...actual, useNavigate: () => navigateMock };
 });
+
+const renderWithRouterAndProvider = (ui) => {
+  return render(<BrowserRouter>{ui}</BrowserRouter>, { wrapper: CurrentUserProvider });
+};
 
 describe("ProfilePage", () => {
   beforeEach(() => {
@@ -29,7 +35,7 @@ describe("ProfilePage", () => {
 
     fetchSelfPosts.mockResolvedValue({ posts: mockPosts });
 
-    render(<ProfilePage />);
+    renderWithRouterAndProvider(<ProfilePage />);
 
     const posts = await screen.findAllByRole("article");
     expect(posts[0].textContent).toContain("Newer Post");
@@ -39,7 +45,7 @@ describe("ProfilePage", () => {
   test("It toggles between editing and viewing profile details", () => {
     window.localStorage.setItem("token", "testToken");
 
-    render(<ProfilePage />);
+    renderWithRouterAndProvider(<ProfilePage />);
 
     const editButton = screen.getByText("Edit Profile");
     fireEvent.click(editButton);
@@ -55,7 +61,7 @@ describe("ProfilePage", () => {
   test("It logs out and navigates to login", () => {
     window.localStorage.setItem("token", "testToken");
 
-    render(<ProfilePage />);
+    renderWithRouterAndProvider(<ProfilePage />);
 
     const logoutButton = screen.getByText("Logout");
     fireEvent.click(logoutButton);
