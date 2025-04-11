@@ -6,7 +6,7 @@ Tech Stack:
 Frontend: React
 Backend: Go
 
-Environement Variable:
+Environment Variable:
 
 ```jsx
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -20,7 +20,7 @@ Method: GET
 Endpoint: ${BACKEND_URL}/comments/post/${post_id}
 Headers:
 
-- Authorization: Bearer: <token>
+- Authorization: Bearer <token>
 
 Response Status: 200
 
@@ -30,7 +30,7 @@ Error HAndling: "Unable to fetch comments"
 
 ===============================================================
 
-createComment(totken, post_id, content) - create a comment associated with a specific post
+createComment(token, post_id, content) - create a comment associated with a specific post
 
 Method: POST
 Endpoint: ${BACKEND_URL}/comments
@@ -62,6 +62,6 @@ Endpoint: ${BACKEND_URL}/comments/{comment_id}
 
 Response Status: 200
 
-Returns: Confirmartion of deleted comment object
+Returns: Confirmation of deleted comment object
 
 Error Handling: "Unable to delete comment"

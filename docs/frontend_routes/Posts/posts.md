@@ -6,7 +6,7 @@ Tech Stack:
 Frontend: React
 Backend: Go
 
-Environement Variable:
+Environment Variable:
 
 ```jsx
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -141,4 +141,4 @@ Response Status: 200
 
 Returns: Array of post objects by specified user_id
 
-Error HAndling: "Unable to fetch posts"
+Error Handling: "Unable to fetch posts"

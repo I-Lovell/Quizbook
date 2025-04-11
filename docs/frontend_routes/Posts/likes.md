@@ -6,7 +6,7 @@ Tech Stack:
 Frontend: React
 Backend: Go
 
-Environement Variable:
+Environment Variable:
 
 ```jsx
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -30,7 +30,7 @@ Error Handling: "Unable to toggle like"
 
 ===============================================================
 
-getLikes(token, post_id) - fetches numebr of likes
+getLikes(token, post_id) - fetches number of likes
 
 Method: GET
 Endpoint: ${BACKEND_URL}/likes/post/{post_id}
