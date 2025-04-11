@@ -17,7 +17,7 @@ teams writing different languages: JavaScript (React) and Golang.
 This repo contains two applications:
 
 - A frontend React App
-- A backend api server
+- A backend api Golang server
 
 These two applications communicates through HTTP requests, passing JSON
 data between each other, and need to be run separately.
@@ -58,7 +58,7 @@ as well as documentation for the starter codebase, and the overall application a
 
 ### Card wall
 
-We developed this project with an agile approach.
+We developed this project with an **agile** approach.
 
 Link to our Trello board:
 https://trello.com/b/WVKeI5oP
@@ -86,7 +86,7 @@ If you haven't already, make sure you have node and NVM installed.
 
 Follow the instructions here: https://go.dev/doc/install
 
-### Set up your project
+### Set up the project
 
 1. Fork this repository
 2. Rename the fork
@@ -128,7 +128,7 @@ Create a file `api/.env` with the following contents:
 
 ```
 POSTGRES_URL="postgresql://localhost:5432/acebook"
-JWT_SECRET="secret"
+JWT_SECRET="<secret>"
 ```
 
 For an explanation of these environment variables, see the documentation.
