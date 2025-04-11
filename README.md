@@ -33,6 +33,10 @@ The libraries we added to the backend Go app are:
 Our database uses:
 - `postgreSQL`
 
+### Video demo
+
+PUT A SCREEN RECORDING OF A RUN THROUGH OF THE SITE HERE
+
 ### Features
 
 - Users can create an account and delete their own account
@@ -76,10 +80,6 @@ picture and editing their bio
 - Continuous scrolling on webpage
 - Animated buttons
 - Refining the UX/UI
-
-### Video demo
-
-PUT A SCREEN RECORDING OF A RUN THROUGH OF THE SITE HERE
 
 ### Documentation
 
