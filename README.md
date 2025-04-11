@@ -165,13 +165,13 @@ You should now be able to open your browser and go to the
 
 This project was created by:
 
-[Abbie Finlayson](https://github.com/abbiefinlayson1)
-[Luke Howeth](https://github.com/LukeHoweth)
-[Alister Ko](https://github.com/alistershko)
-[Etienne Le Goater](https://github.com/Elegoater)
-[Imogen Lovell](https://github.com/I-Lovell)
+[Abbie Finlayson](https://github.com/abbiefinlayson1),  
+[Luke Howeth](https://github.com/LukeHoweth),  
+[Alister Ko](https://github.com/alistershko),  
+[Etienne Le Goater](https://github.com/Elegoater),  
+[Imogen Lovell](https://github.com/I-Lovell), and  
 [Emily Sadler](https://github.com/EmiSadler)
 
 Under the guidance of our coaches at [Makers Academy](https://github.com/makersacademy):
-Kerry Finch
+Kerry Finch  
 [John Forster](https://github.com/JohnForster)
