@@ -29,16 +29,14 @@ e.g. Added dependencies to use Zod for Authentication and React-Hook-Form
 
 - Users can create an account and delete their own account
 - Users can log in using an account and log out from an account
-- Users can view and edit their profile information, including uploading a new profile 
+- Users can view and edit their profile, including uploading a new profile 
 picture and editing their bio
 - Users can view other users' accounts
 - Users can create, view, update, and delete posts
 - Users can like and unlike posts
 - Users can create, view, and delete comments on posts
-- Access tokens and token validation to ensure users are logged in properly 
-in order to access the website beyond the homepage
-- A seed file is included to populate the database in order to quickly set up a 
-version of our application that demonstrates all the features
+- Access tokens and token validation
+- A seed file to populate the database with data that demonstrates all the features
 - Frontend form submission validation (e.g. passwords, correctly filled posts etc.)
 - Error handling
 - Tests for both the frontend and backend applications
@@ -59,6 +57,8 @@ There is documentation for both the [frontend](./docs/frontend_routes) and the [
 as well as documentation for the starter codebase, and the overall application at the end of the project.
 
 ### Card wall
+
+We developed this project with an agile approach.
 
 Link to our Trello board:
 https://trello.com/b/WVKeI5oP
