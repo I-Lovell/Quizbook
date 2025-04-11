@@ -161,20 +161,17 @@ const Post = (props) => {
             >
               {isLiked ? "Unlike" : "Like"}
             </button>
-            <br />
-            <br />
             <div>
               <strong>Comments:</strong>
-              <br />
-              <br />
               <div className="comment-input">
                 <input
+                  className="comment-textarea"
                   type="text"
                   value={comment}
                   onChange={(event) => setComment(event.target.value)}
                   placeholder="Write a comment..."
                 />
-                <button className="comment-button" onClick={submitComment}>
+                <button className="like-button" onClick={submitComment}>
                   Post Comment
                 </button>
               </div>

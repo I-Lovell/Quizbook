@@ -62,6 +62,7 @@ export const Login = () => {
         </div>
         <button
           disabled={isSubmitting}
+          className="like-button"
           role="submit-button"
           id="submit"
           type="submit"

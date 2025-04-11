@@ -98,13 +98,14 @@ const ProfileForm = () => {
                 />
               </div>
             )}
-            />
+          />
         </div>
 
         <textarea name="bio" className="bio-edit" {...register("bio")} />
         <br />
         <button
           disabled={isSubmitting}
+          className="like-button"
           role="submit-button"
           id="submit"
           type="submit"
@@ -114,7 +115,7 @@ const ProfileForm = () => {
         <br />
         <button
           type="button"
-          className="delete-account-button"
+          className="like-button"
           onClick={handleDelete}
           disabled={isDeleting}
         >
