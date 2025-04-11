@@ -10,7 +10,7 @@ In this project, we started with a lean, existing application as we worked
 to **improve and extend** it over a two week period. A significant part of 
 this challenge was to familiarise yourself with the codebase we inherited. 
 Another part of the challenge was working in separate frontend and backend 
-teams writing different languages: JavaScript (React) and Go.
+teams writing different languages: **JavaScript (React)** and **Go**.
 
 ### Structure
 
@@ -19,21 +19,19 @@ This repo contains two applications:
 - A frontend React App
 - A backend api Go server
 
-These two applications communicates through HTTP requests, passing JSON
-data between each other, and need to be run separately.
+These two applications communicates through HTTP requests, passing JSON data  
+between each other, and need to be run separately.
 
-The frontend React app uses:
-- `react-router`
-- `react-router-dom`
-- `react-type-animation`
-- `vite`
-- `es-lint`
-- `vitest`
-- `zod`
+The libraries we added to the frontend React app are:
+- `react-type-animation` for custom type animations
+- `react-web-hooks` for simplifying React feature
+- `zod` for input validation ( when logging in, creating a password etc.)
 
-The backend Go app uses:
+The libraries we added to the backend Go app are:
+- `bcrypt` for password hashing in the database
 
-`postgreSQL` for our database
+Our database uses:
+- `postgreSQL`
 
 ### Features
 
