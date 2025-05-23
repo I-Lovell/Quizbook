@@ -33,10 +33,6 @@ The libraries we added to the backend Go app are:
 Our database uses:
 - `postgreSQL`
 
-### Video demo
-
-PUT A SCREEN RECORDING OF A RUN THROUGH OF THE SITE HERE
-
 ### Features
 
 - Users can create an account and delete their own account
@@ -160,9 +156,10 @@ VITE_BACKEND_URL="http://localhost:8082"
 Create a file `api/.env` with the following contents:
 
 ```
-POSTGRES_URL="postgresql://localhost:5432/acebook"
+POSTGRES_URL="postgresql://localhost:5432/<DB_NAME>"
 JWT_SECRET="<secret>"
 ```
+Be sure to include the name of the database you just set up at the end of the postgres url.
 
 For an explanation of these environment variables, see the documentation.
 
